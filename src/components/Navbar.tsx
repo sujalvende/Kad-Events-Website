@@ -92,14 +92,24 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Right Action: Luxury Animated Hamburger Menu Button */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* Right Action: Let's Talk Button for Desktop, Hamburger Drawer for Mobile */}
+          <div className="flex items-center gap-3 shrink-0">
+            {/* Desktop Direct CTA: Let's Talk -> goes straight to the contact form */}
+            <TLink
+              to="/contact"
+              className="hidden lg:inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-5 py-2 text-[0.68rem] font-bold uppercase tracking-[0.2em] text-gold backdrop-blur-md transition-all duration-300 hover:border-gold hover:bg-gold hover:text-ink hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] active:scale-95"
+            >
+              <Sparkles size={13} className="text-current transition-transform duration-300 group-hover:rotate-12" />
+              <span>Let's Talk</span>
+            </TLink>
+
+            {/* Mobile / Tablet: Hamburger Menu Button (hidden on desktop) */}
             <button
               onClick={() => setOpen(!open)}
               aria-expanded={open}
               aria-controls="agency-sidebar"
               aria-label={open ? 'Close navigation sidebar' : 'Open navigation sidebar'}
-              className={`group relative flex items-center gap-1.5 sm:gap-2 rounded-full border px-3 py-1.5 sm:px-4 sm:py-2 text-[0.62rem] sm:text-[0.68rem] font-bold uppercase tracking-[0.16em] sm:tracking-[0.2em] backdrop-blur-md transition-all duration-300 min-h-[36px] ${
+              className={`lg:hidden group relative flex items-center gap-1.5 sm:gap-2 rounded-full border px-3 py-1.5 sm:px-4 sm:py-2 text-[0.62rem] sm:text-[0.68rem] font-bold uppercase tracking-[0.16em] sm:tracking-[0.2em] backdrop-blur-md transition-all duration-300 min-h-[36px] ${
                 open
                   ? 'border-gold bg-gold/15 text-gold shadow-[0_0_25px_rgba(212,175,55,0.3)]'
                   : 'border-white/15 bg-white/[0.04] text-white hover:border-gold/60 hover:bg-gold/10 hover:text-gold hover:shadow-[0_0_20px_rgba(212,175,55,0.2)]'
@@ -142,10 +152,9 @@ export default function Navbar() {
         />
       </header>
 
-      {/* Luxury Slide-in Sidebar Drawer Overlay System */}
-      {/* Container is fixed inset-0 overflow-hidden so off-screen drawer NEVER expands page or viewport width */}
+      {/* Luxury Slide-in Sidebar Drawer Overlay System (Mobile / Tablet) */}
       <div
-        className={`fixed inset-0 z-50 overflow-hidden transition-all duration-500 ${
+        className={`fixed inset-0 z-50 overflow-hidden transition-all duration-500 lg:hidden ${
           open ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
         aria-hidden={!open}
@@ -159,7 +168,7 @@ export default function Navbar() {
           }`}
         />
 
-        {/* Luxury Slide-in Sidebar Drawer (Desktop & Mobile) */}
+        {/* Luxury Slide-in Sidebar Drawer */}
         <aside
           id="agency-sidebar"
           role="dialog"
