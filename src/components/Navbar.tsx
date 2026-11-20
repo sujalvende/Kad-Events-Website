@@ -94,13 +94,33 @@ export default function Navbar() {
 
           {/* Right Action: Let's Talk Button for Desktop, Hamburger Drawer for Mobile */}
           <div className="flex items-center gap-3 shrink-0">
-            {/* Desktop Direct CTA: Let's Talk -> goes straight to the contact form */}
+            {/* Desktop Direct CTA: Luxury Interactive Magnetic-Fill "Let's Talk" Button */}
             <TLink
               to="/contact"
-              className="hidden lg:inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-5 py-2 text-[0.68rem] font-bold uppercase tracking-[0.2em] text-gold backdrop-blur-md transition-all duration-300 hover:border-gold hover:bg-gold hover:text-ink hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] active:scale-95"
+              className="group relative hidden lg:inline-flex items-center gap-2.5 overflow-hidden rounded-full border border-gold/60 bg-gradient-to-r from-gold/15 via-amber-400/10 to-gold/15 px-5 py-2 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-white backdrop-blur-xl transition-all duration-500 hover:border-gold hover:text-ink hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] active:scale-95"
             >
-              <Sparkles size={13} className="text-current transition-transform duration-300 group-hover:rotate-12" />
-              <span>Let's Talk</span>
+              {/* Smooth liquid gold slide-in flood */}
+              <span
+                aria-hidden
+                className="absolute inset-0 -translate-x-full bg-gradient-to-r from-[#d4af37] via-[#f6d878] to-[#d4af37] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0"
+              />
+
+              {/* Live pulsing studio status beacon */}
+              <span className="relative flex h-2 w-2 shrink-0">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-75 group-hover:bg-ink" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-gold transition-colors duration-300 group-hover:bg-ink" />
+              </span>
+
+              {/* Label */}
+              <span className="relative z-10 transition-colors duration-300">
+                Let's Talk
+              </span>
+
+              {/* Kinetic upward arrow */}
+              <ArrowUpRight
+                size={14}
+                className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
             </TLink>
 
             {/* Mobile / Tablet: Hamburger Menu Button (hidden on desktop) */}
