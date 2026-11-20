@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+/* ─── Design tokens ───────────────────────────────────────────────────── */
+@theme {
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Manrope', system-ui, sans-serif;
+
+  --color-ink:         #060608;
+  --color-panel:       #0c0d12;
+  --color-card:        #13141c;
+  --color-snow:        #f8fafc;
+  --color-muted:       #94a3b8;
+  --color-gold:        #d4af37;
+  --color-gold-glow:   #f6d878;
+  --color-cyan-glow:   #38bdf8;
+  --color-violet-glow: #c084fc;
+  --color-line:        rgb(255 255 255 / 0.1);
+
+  /* Custom xs breakpoint for mobile-first layouts */
+  --breakpoint-xs: 475px;
+}
+
+/* ─── Base ────────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    background: var(--color-ink);
+    color-scheme: dark;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-ink);
+    color: var(--color-snow);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+  #root {
+    width: 100%;
+    max-width: 100%;
+  }
+  ::selection {
+    background: var(--color-gold);
+    color: #000;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+  img, video {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+/* ─── Component utilities ─────────────────────────────────────────────── */
+@layer components {
+  .eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .display {
+    font-family: var(--font-display);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .container-x {
+    width: 100%;
+    max-width: 90rem;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 4vw, 3.5rem);
+  }
+  .section-y {
+    padding-block: clamp(4.5rem, 10vw, 9rem);
+  }
+  /* Fluid heading scale */
+  .h-xl { font-size: clamp(2rem, 7vw, 7.5rem); text-transform: uppercase; }
+  .h-lg { font-size: clamp(1.9rem, 5vw, 5rem);  text-transform: uppercase; }
+  .h-md { font-size: clamp(1.5rem, 3.5vw, 3.5rem);  text-transform: uppercase; }
+
+  /* Luxury Gold Gradient Text */
+  .gold-gradient-text {
+    background: linear-gradient(135deg, #fff2cc 0%, #e8c872 30%, #c5a46d 60%, #e5b869 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Vibrant Glass Panel */
+  .glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass-card:hover {
+    border-color: rgba(212, 175, 55, 0.5);
+    box-shadow: 0 10px 40px -10px rgba(212, 175, 55, 0.2), 0 0 20px rgba(212, 175, 55, 0.1);
+  }
+
+  /* Ambient radial glows */
+  .radial-gold-glow {
+    background: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0) 70%);
+  }
+  .radial-cyan-glow {
+    background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.15) 0%, rgba(56, 189, 248, 0) 70%);
+  }
+  .radial-violet-glow {
+    background: radial-gradient(circle at 50% 50%, rgba(192, 132, 252, 0.15) 0%, rgba(192, 132, 252, 0) 70%);
+  }
+}
+
+/* ─── Mobile utilities ────────────────────────────────────────────────── */
+@layer utilities {
+  .touch-target { min-height: 44px; min-width: 44px; }
+  .scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+}
+
+/* ─── Image mask reveal helper ────────────────────────────────────────── */
+.img-mask { overflow: hidden; }
+
+/* ─── Subtle pulsating animation for live badges ─────────────────────── */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.6)); }
+}
+.pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* ─── Reduced motion ──────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
