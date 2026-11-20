@@ -41,7 +41,7 @@ export function ServiceCard({ s, i, className = '' }: { s: Service; i: number; c
     <TLink
       to={`/services/${s.slug}`}
       aria-label={s.title}
-      className={`group relative block aspect-[4/5] overflow-hidden rounded-xl border border-white/10 bg-card transition-all duration-500 hover:border-gold/60 hover:shadow-[0_10px_35px_-5px_rgba(212,175,55,0.25)] ${className}`}
+      className={`touch-feedback group relative block aspect-[4/5] overflow-hidden rounded-xl border border-white/10 bg-card transition-all duration-300 active:scale-[0.98] hover:border-gold/60 hover:shadow-[0_10px_35px_-5px_rgba(212,175,55,0.25)] ${className}`}
     >
       <img
         src={src(s.photo, 800)}
@@ -88,7 +88,7 @@ export function ProjectCard({ p, className = '', ratio = 'aspect-[4/3]' }: { p: 
       to={`/work/${p.slug}`}
       data-cursor="view"
       aria-label={`View project: ${p.title}`}
-      className={`group relative block overflow-hidden rounded-xl border border-white/10 transition-all duration-500 hover:border-gold/60 hover:shadow-[0_12px_40px_-5px_rgba(212,175,55,0.25)] ${className}`}
+      className={`touch-feedback group relative block overflow-hidden rounded-xl border border-white/10 transition-all duration-300 active:scale-[0.98] hover:border-gold/60 hover:shadow-[0_12px_40px_-5px_rgba(212,175,55,0.25)] ${className}`}
     >
       <div data-img-reveal className={`img-mask relative bg-card ${ratio}`}>
         <img

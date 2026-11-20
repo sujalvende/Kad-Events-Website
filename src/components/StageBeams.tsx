@@ -67,15 +67,34 @@ function StageBeamsComponent({
         @keyframes stageBeamSway4 { 0%, 100% { transform: rotate(5.5deg); } 50% { transform: rotate(-5.5deg); } }
         @keyframes stageBeamSway5 { 0%, 100% { transform: rotate(7deg); } 50% { transform: rotate(-7deg); } }
         @keyframes beamLuminescence { 0%, 100% { opacity: 0.65; } 50% { opacity: 1; } }
+
+        /* Tighter, focused sway arcs for portrait mobile screens (<640px) */
+        @media (max-width: 640px) {
+          @keyframes stageBeamSway1 { 0%, 100% { transform: rotate(-3.5deg); } 50% { transform: rotate(3.5deg); } }
+          @keyframes stageBeamSway2 { 0%, 100% { transform: rotate(-2.8deg); } 50% { transform: rotate(2.8deg); } }
+          @keyframes stageBeamSway3 { 0%, 100% { transform: rotate(-2.2deg); } 50% { transform: rotate(2.2deg); } }
+          @keyframes stageBeamSway4 { 0%, 100% { transform: rotate(2.8deg); } 50% { transform: rotate(-2.8deg); } }
+          @keyframes stageBeamSway5 { 0%, 100% { transform: rotate(3.5deg); } 50% { transform: rotate(-3.5deg); } }
+        }
       `}</style>
 
       {/* Atmospheric bottom stage source glow */}
       <div
-        className="absolute inset-x-0 h-44 blur-[80px] transition-all"
+        className="absolute inset-x-0 h-44 sm:h-52 blur-[80px] transition-all"
         style={{
           bottom: isUp ? '-30px' : 'auto',
           top: isUp ? 'auto' : '-30px',
           background: `radial-gradient(ellipse 70% 50% at 50% ${isUp ? '100%' : '0%'}, ${beamColor.glow} 0%, ${beamColor.ambient} 45%, transparent 75%)`,
+        }}
+      />
+
+      {/* Mobile-specific focused spotlight corona */}
+      <div
+        className="block sm:hidden absolute inset-x-0 h-32 blur-[40px] pointer-events-none opacity-80"
+        style={{
+          bottom: isUp ? '0px' : 'auto',
+          top: isUp ? 'auto' : '0px',
+          background: `radial-gradient(ellipse 50% 40% at 50% ${isUp ? '100%' : '0%'}, ${beamColor.glow} 0%, transparent 70%)`,
         }}
       />
 

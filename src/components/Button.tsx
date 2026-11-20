@@ -31,7 +31,7 @@ export default function Button({ to, children, variant = 'solid', className = ''
       onPointerEnter={() => { if (ref.current) rect.current = ref.current.getBoundingClientRect() }}
       onPointerMove={mag}
       onPointerLeave={reset}
-      className={`group relative inline-flex items-center justify-center gap-3 overflow-hidden px-7 py-4 text-[0.7rem] font-semibold uppercase tracking-[0.22em] transition-[transform,color,border-color] duration-300 ease-out ${solid ? 'bg-gold text-ink' : 'border border-white/30 text-snow hover:border-gold hover:text-ink'} ${className}`}
+      className={`touch-feedback group relative inline-flex min-h-[44px] items-center justify-center gap-3 overflow-hidden px-7 py-4 text-[0.7rem] font-semibold uppercase tracking-[0.22em] transition-[transform,color,border-color] duration-300 ease-out active:scale-[0.98] ${solid ? 'bg-gold text-ink' : 'border border-white/30 text-snow hover:border-gold hover:text-ink'} ${className}`}
     >
       <span aria-hidden className={`absolute inset-0 -translate-x-full transition-transform duration-500 ease-[cubic-bezier(.7,0,.2,1)] group-hover:translate-x-0 ${solid ? 'bg-snow' : 'bg-gold'}`} />
       <span className="relative">{children}</span>

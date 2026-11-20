@@ -133,11 +133,14 @@ export default function About() {
             </p>
           </div>
 
-          <div data-stagger className="grid gap-4 sm:gap-6 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
+          <div
+            data-stagger
+            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none -mx-4 px-4 gap-3.5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6"
+          >
             {formats.map((f) => (
               <div
                 key={f.title}
-                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-card transition-all duration-500 hover:border-gold/60 hover:shadow-[0_15px_40px_-10px_rgba(212,175,55,0.25)]"
+                className="w-[82vw] xs:w-[70vw] sm:w-auto shrink-0 snap-center group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-card transition-all duration-300 active:scale-[0.98] hover:border-gold/60 hover:shadow-[0_15px_40px_-10px_rgba(212,175,55,0.25)]"
               >
                 <div className="relative aspect-[16/11] overflow-hidden">
                   <img
@@ -157,6 +160,12 @@ export default function About() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Mobile swipe hint */}
+          <div className="mt-3.5 flex items-center justify-center gap-1.5 sm:hidden" aria-hidden>
+            <span className="text-[0.58rem] font-semibold uppercase tracking-widest text-slate-400">Swipe to view formats</span>
+            <span className="text-gold text-xs">→</span>
           </div>
         </div>
       </section>

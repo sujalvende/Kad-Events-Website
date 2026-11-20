@@ -99,13 +99,25 @@ export default function Hero() {
       {/* Top scrim for nav legibility */}
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/75 to-transparent" />
 
-      {/* Bottom scroll cue on mobile so visitors immediately know to scroll */}
-      <div className="pointer-events-none absolute bottom-8 inset-x-0 z-20 flex flex-col items-center gap-2 md:hidden">
-        <span className="text-[0.62rem] font-bold uppercase tracking-[0.28em] text-slate-300 drop-shadow-md">
-          Scroll to explore
-        </span>
-        <div className="h-7 w-4 rounded-full border border-white/30 p-1 flex justify-center">
-          <div className="h-1.5 w-1 rounded-full bg-gold animate-bounce" />
+      {/* Bottom scrim for mobile contrast & text legibility */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-ink via-ink/60 to-transparent md:hidden" />
+
+      {/* Luxury frosted glass scroll cue on mobile */}
+      <div
+        className="pointer-events-none absolute bottom-[max(2rem,env(safe-area-inset-bottom))] inset-x-0 z-20 flex flex-col items-center gap-2 md:hidden"
+        aria-hidden
+      >
+        <div className="flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-3.5 py-1 backdrop-blur-xl shadow-[0_4px_25px_rgba(0,0,0,0.8)]">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-75" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-gold" />
+          </span>
+          <span className="eyebrow !text-[0.58rem] tracking-[0.24em] text-slate-200">
+            Scroll to explore
+          </span>
+        </div>
+        <div className="h-6 w-3.5 rounded-full border border-white/25 p-0.5 flex justify-center">
+          <div className="h-1.5 w-1 rounded-full bg-gradient-to-b from-gold to-amber-200 animate-bounce shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
         </div>
       </div>
     </section>

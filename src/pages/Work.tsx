@@ -24,21 +24,21 @@ export default function Work() {
       />
 
       <section className="container-x pb-16 sm:pb-24 lg:pb-32">
-        {/* Category filters — horizontally scrollable swipe row on mobile */}
+        {/* Category filters — horizontally scrollable swipe row on mobile with touch snap */}
         <div
           role="group"
           aria-label="Filter projects by category"
-          className="mb-8 sm:mb-12 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none sm:flex-wrap -mx-4 px-4 sm:mx-0 sm:px-0"
+          className="mb-8 sm:mb-12 flex items-center gap-2 overflow-x-auto pb-3 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap"
         >
           {cats.map((c) => (
             <button
               key={c}
               onClick={() => setCat(c)}
               aria-pressed={cat === c}
-              className={`shrink-0 rounded-full border px-4 sm:px-5 py-2 sm:py-2.5 text-[0.65rem] sm:text-[0.68rem] font-semibold uppercase tracking-[0.18em] transition-all duration-300 ${
+              className={`touch-feedback shrink-0 snap-start flex min-h-[44px] items-center justify-center rounded-full border px-4 sm:px-5 py-2 sm:py-2.5 text-[0.65rem] sm:text-[0.68rem] font-semibold uppercase tracking-[0.18em] transition-all duration-300 active:scale-95 ${
                 cat === c
                   ? 'border-gold bg-gold text-ink shadow-[0_0_15px_rgba(212,175,55,0.4)]'
-                  : 'border-white/10 bg-white/[0.03] text-muted hover:border-gold hover:text-gold'
+                  : 'border-white/10 bg-white/[0.03] text-muted hover:border-gold hover:text-gold active:bg-white/10 active:text-white'
               }`}
             >
               {c}

@@ -203,15 +203,15 @@ export default function Navbar() {
           <div className="pointer-events-none absolute right-0 bottom-1/4 h-72 w-72 rounded-full bg-amber-500/5 blur-[120px]" />
 
           {/* Top Header Row of Sidebar */}
-          <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-5 pt-1">
+          <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-5 pt-[max(0.75rem,env(safe-area-inset-top))]">
             <Logo />
             <button
               onClick={() => setOpen(false)}
               aria-label="Close sidebar"
-              className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-widest text-slate-300 transition-colors hover:border-gold hover:text-gold"
+              className="touch-feedback flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[0.65rem] font-bold uppercase tracking-widest text-slate-300 transition-colors hover:border-gold hover:text-gold active:scale-95"
             >
               <span>ESC</span>
-              <span className="text-gold">✕</span>
+              <span className="text-gold text-sm leading-none">✕</span>
             </button>
           </div>
 
@@ -224,18 +224,23 @@ export default function Navbar() {
               {nav.map((n, i) => {
                 const active = pathname === n.to || (n.to !== '/' && pathname.startsWith(n.to + '/'))
                 return (
-                  <li key={n.to} className="overflow-hidden border-b border-white/5">
+                  <li
+                    key={n.to}
+                    className={`overflow-hidden border-b border-white/5 ${
+                      open ? `drawer-stagger-${Math.min(5, i + 1)}` : ''
+                    }`}
+                  >
                     <TLink
                       to={n.to}
-                      className={`display group flex items-baseline justify-between py-3 sm:py-3.5 text-xl sm:text-2xl md:text-4xl transition-all duration-300 hover:translate-x-2 ${
+                      className={`display group flex items-baseline justify-between py-3.5 sm:py-4 text-2xl sm:text-3xl md:text-4xl transition-all duration-300 hover:translate-x-2 touch-feedback ${
                         active ? 'gold-gradient-text' : 'text-slate-200 hover:text-white'
                       }`}
                     >
                       <span className="flex items-center gap-3">
-                        <span className="text-xs font-sans font-mono tracking-widest text-gold/50 group-hover:text-gold transition-colors">
+                        <span className="text-xs font-sans font-mono tracking-widest text-gold/60 group-hover:text-gold transition-colors">
                           0{i + 1}
                         </span>
-                        <span>{n.label}</span>
+                        <span className="text-balance">{n.label}</span>
                       </span>
                       <ArrowUpRight
                         size={18}
@@ -269,7 +274,7 @@ export default function Navbar() {
           </div>
 
           {/* Bottom Contact & Agency Credentials */}
-          <div className="relative z-10 border-t border-white/10 pt-5">
+          <div className="relative z-10 border-t border-white/10 pt-5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
             <div className="grid gap-3 sm:grid-cols-2 mb-5">
               <div>
                 <span className="eyebrow block text-[0.55rem] sm:text-[0.58rem] text-slate-400 mb-0.5">
@@ -304,27 +309,29 @@ export default function Navbar() {
             </div>
 
             {/* Quick Direct Actions for Mobile */}
-            <div className="grid grid-cols-2 gap-2 mb-4 sm:hidden">
+            <div className={`grid grid-cols-2 gap-2 mb-4 sm:hidden ${open ? 'drawer-stagger-6' : ''}`}>
               <a
                 href={`tel:${contact.phone.replace(/\s/g, '')}`}
-                className="flex items-center justify-center gap-2 rounded-xl border border-gold/30 bg-gold/10 py-2.5 px-3 text-xs font-semibold text-gold transition-colors active:scale-95"
+                className="touch-feedback flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-gold/40 bg-gold/15 py-3 px-3 text-xs font-bold uppercase tracking-wider text-gold shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-colors hover:bg-gold/25"
               >
-                <Phone size={13} className="shrink-0" />
+                <Phone size={14} className="shrink-0" />
                 <span>Call Desk</span>
               </a>
               <a
                 href={`mailto:${contact.email}`}
-                className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 py-2.5 px-3 text-xs font-semibold text-slate-200 transition-colors active:scale-95 hover:border-gold hover:text-gold"
+                className="touch-feedback flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 py-3 px-3 text-xs font-bold uppercase tracking-wider text-slate-200 transition-colors hover:border-gold hover:text-gold hover:bg-white/10"
               >
-                <Mail size={13} className="shrink-0 text-gold" />
+                <Mail size={14} className="shrink-0 text-gold" />
                 <span>Email Desk</span>
               </a>
             </div>
 
-            <Button to="/contact" className="w-full shadow-[0_0_30px_rgba(212,175,55,0.35)]">
-              <Sparkles size={14} className="mr-1.5 text-ink" />
-              Start A Conversation
-            </Button>
+            <div className={open ? 'drawer-stagger-6' : ''}>
+              <Button to="/contact" className="w-full shadow-[0_0_30px_rgba(212,175,55,0.35)] touch-feedback">
+                <Sparkles size={14} className="mr-1.5 text-ink" />
+                Start A Conversation
+              </Button>
+            </div>
           </div>
         </aside>
       </div>

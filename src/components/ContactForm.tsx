@@ -16,7 +16,7 @@ const empty: Enquiry = {
 }
 
 const inputClass =
-  'w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-snow placeholder:text-muted/40 transition-all focus:border-gold/60 focus:bg-white/[0.06] focus:outline-none focus:ring-1 focus:ring-gold/40 aria-[invalid=true]:border-red-400'
+  'w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3.5 text-base sm:text-sm text-snow placeholder:text-muted/40 transition-all focus:border-gold/60 focus:bg-white/[0.06] focus:outline-none focus:ring-1 focus:ring-gold/40 aria-[invalid=true]:border-red-400 min-h-[48px]'
 
 function FormField({
   id,
@@ -171,7 +171,7 @@ export default function ContactForm({ presetType = '' }: { presetType?: string }
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="group relative inline-flex w-full items-center justify-center gap-3 overflow-hidden rounded-lg bg-gold px-8 py-4 text-[0.72rem] font-bold uppercase tracking-[0.22em] text-ink transition-all duration-300 hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] disabled:opacity-70 sm:w-auto"
+          className="touch-feedback group relative inline-flex w-full min-h-[48px] items-center justify-center gap-3 overflow-hidden rounded-lg bg-gold px-8 py-4 text-[0.72rem] font-bold uppercase tracking-[0.22em] text-ink transition-all duration-300 active:scale-[0.98] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] disabled:opacity-70 sm:w-auto"
         >
           <span
             aria-hidden

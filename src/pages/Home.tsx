@@ -27,7 +27,7 @@ function SectionHead({
       </div>
       <TLink
         to={to}
-        className="group inline-flex items-center gap-2 border-b border-gold/60 pb-1 text-[0.65rem] sm:text-[0.7rem] font-bold uppercase tracking-[0.22em] text-gold transition-all duration-300 hover:text-white hover:border-white self-start md:self-auto"
+        className="touch-feedback group inline-flex min-h-[36px] items-center gap-2 border-b border-gold/60 pb-1 text-[0.65rem] sm:text-[0.7rem] font-bold uppercase tracking-[0.22em] text-gold transition-all duration-300 hover:text-white hover:border-white self-start md:self-auto"
       >
         <span>{cta}</span>
         <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5" aria-hidden />
@@ -300,13 +300,16 @@ export default function Home() {
             to="/process"
             cta="How We Deliver"
           />
-          <div data-stagger className="mt-10 sm:mt-16 grid gap-3 sm:gap-5 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
+          <div
+            data-stagger
+            className="mt-8 sm:mt-16 flex overflow-x-auto snap-x snap-mandatory scrollbar-none -mx-4 px-4 gap-3.5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5"
+          >
             {standards.map((st) => {
               const Icon = st.icon
               return (
                 <div
                   key={st.n}
-                  className="group relative flex flex-col justify-between rounded-xl border border-white/10 bg-white/[0.02] p-4 sm:p-6 md:p-8 backdrop-blur-sm transition-all duration-500 hover:border-gold/60 hover:bg-white/[0.04] hover:shadow-[0_10px_35px_-5px_rgba(212,175,55,0.2)]"
+                  className="w-[82vw] xs:w-[70vw] sm:w-auto shrink-0 snap-center group relative flex flex-col justify-between rounded-xl border border-white/10 bg-white/[0.02] p-5 sm:p-6 md:p-8 backdrop-blur-sm transition-all duration-300 active:scale-[0.98] hover:border-gold/60 hover:bg-white/[0.04] hover:shadow-[0_10px_35px_-5px_rgba(212,175,55,0.2)]"
                 >
                   <div>
                     <div className="flex items-center justify-between">
@@ -318,12 +321,19 @@ export default function Home() {
                     <h3 className="display mt-4 sm:mt-6 text-xl sm:text-2xl text-white group-hover:text-gold transition-colors">{st.title}</h3>
                     <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm leading-relaxed text-muted">{st.desc}</p>
                   </div>
-                  <div className="mt-6 sm:mt-8 border-t border-white/10 pt-3 sm:pt-4">
-                    <span className="text-[0.62rem] sm:text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">{st.tag}</span>
+                  <div className="mt-6 sm:mt-8 border-t border-white/10 pt-3 sm:pt-4 flex items-center justify-between text-[0.62rem] sm:text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">
+                    <span>{st.tag}</span>
+                    <span className="text-gold/40 text-xs sm:hidden">✦</span>
                   </div>
                 </div>
               )
             })}
+          </div>
+
+          {/* Mobile swipe hint */}
+          <div className="mt-3.5 flex items-center justify-center gap-1.5 sm:hidden" aria-hidden>
+            <span className="text-[0.58rem] font-semibold uppercase tracking-widest text-slate-400">Swipe to inspect all capabilities</span>
+            <span className="text-gold text-xs">→</span>
           </div>
         </div>
       </section>

@@ -6,6 +6,7 @@ import { useLenis, scrollToTop } from '../lib/lenis'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import Cursor from './Cursor'
+import MobileQuickDock from './MobileQuickDock'
 
 /**
  * Inner handles per-route concerns: scroll-to-top and reveal animations.
@@ -31,6 +32,7 @@ function Inner() {
         Skip to content
       </a>
       <Navbar />
+      <MobileQuickDock />
       <main id="main">
         <Outlet />
       </main>

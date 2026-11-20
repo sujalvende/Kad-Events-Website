@@ -73,6 +73,7 @@
     line-height: 0.95;
     letter-spacing: -0.02em;
     font-weight: 400;
+    text-wrap: balance;
   }
   .container-x {
     width: 100%;
@@ -81,12 +82,12 @@
     padding-inline: clamp(1rem, 4vw, 3.5rem);
   }
   .section-y {
-    padding-block: clamp(4.5rem, 10vw, 9rem);
+    padding-block: clamp(4rem, 9vw, 9rem);
   }
   /* Fluid heading scale */
-  .h-xl { font-size: clamp(2rem, 7vw, 7.5rem); text-transform: uppercase; }
-  .h-lg { font-size: clamp(1.9rem, 5vw, 5rem);  text-transform: uppercase; }
-  .h-md { font-size: clamp(1.5rem, 3.5vw, 3.5rem);  text-transform: uppercase; }
+  .h-xl { font-size: clamp(2rem, 7vw, 7.5rem); text-transform: uppercase; text-wrap: balance; }
+  .h-lg { font-size: clamp(1.9rem, 5vw, 5rem);  text-transform: uppercase; text-wrap: balance; }
+  .h-md { font-size: clamp(1.5rem, 3.5vw, 3.5rem);  text-transform: uppercase; text-wrap: balance; }
 
   /* Luxury Gold Gradient Text */
   .gold-gradient-text {
@@ -120,11 +121,23 @@
   }
 }
 
-/* ─── Mobile utilities ────────────────────────────────────────────────── */
+/* ─── Mobile utilities & tactile interactions ─────────────────────────── */
 @layer utilities {
   .touch-target { min-height: 44px; min-width: 44px; }
   .scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
   .scrollbar-none::-webkit-scrollbar { display: none; }
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+
+  /* Tactile feedback on touch devices */
+  .touch-feedback {
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease;
+  }
+  .touch-feedback:active {
+    transform: scale(0.96);
+    opacity: 0.88;
+  }
 }
 
 /* ─── Image mask reveal helper ────────────────────────────────────────── */
@@ -154,6 +167,24 @@
   animation: ambientGlowPulse 14s ease-in-out infinite alternate;
   will-change: transform, opacity;
 }
+
+/* ─── Staggered cascade entrance for mobile drawer ───────────────────── */
+@keyframes drawerCascadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.drawer-stagger-1 { animation: drawerCascadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both; }
+.drawer-stagger-2 { animation: drawerCascadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both; }
+.drawer-stagger-3 { animation: drawerCascadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.20s both; }
+.drawer-stagger-4 { animation: drawerCascadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both; }
+.drawer-stagger-5 { animation: drawerCascadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both; }
+.drawer-stagger-6 { animation: drawerCascadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.38s both; }
 
 /* ─── Reduced motion ──────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
