@@ -84,11 +84,10 @@ export default function InteractiveStage() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setHasMounted(true)
-          setIsOnScreen(true)
           observer.disconnect()
         }
       },
-      { rootMargin: '800px 0px' }
+      { rootMargin: '600px 0px' }
     )
     observer.observe(el)
 
@@ -98,13 +97,13 @@ export default function InteractiveStage() {
     }
   }, [hasMounted])
 
-  // Track real-time visibility to pause/resume 3D rendering
+  // Track real-time visibility to pause/resume 3D rendering — only runs when actually on-screen
   useEffect(() => {
     const el = trackRef.current
     if (!el) return
     const observer = new IntersectionObserver(
       ([entry]) => setIsOnScreen(entry.isIntersecting),
-      { rootMargin: '200px 0px', threshold: 0 }
+      { rootMargin: '40px 0px', threshold: 0 }
     )
     observer.observe(el)
     return () => observer.disconnect()

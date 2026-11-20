@@ -36,9 +36,8 @@ function SectionHead({
   )
 }
 
-/* ─── Animated Number Counter on Scroll ──────────────────────────────── */
-function AnimatedCounter({ value, duration = 1600 }: { value: string; duration?: number }) {
-  const [display, setDisplay] = useState(value)
+/* ─── Animated Number Counter on Scroll (Direct DOM update - zero React re-renders) ── */
+function AnimatedCounter({ value, duration = 1200 }: { value: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null)
   const hasAnimated = useRef(false)
 
@@ -60,6 +59,7 @@ function AnimatedCounter({ value, duration = 1600 }: { value: string; duration?:
           const startTime = performance.now()
 
           const frame = (now: number) => {
+            if (!ref.current) return
             const elapsed = now - startTime
             const progress = Math.min(1, elapsed / duration)
             // Ease out cubic
@@ -67,15 +67,15 @@ function AnimatedCounter({ value, duration = 1600 }: { value: string; duration?:
             const current = targetNum * ease
 
             if (isDecimal) {
-              setDisplay(`${current.toFixed(1)}${suffix}`)
+              ref.current.textContent = `${current.toFixed(1)}${suffix}`
             } else {
-              setDisplay(`${Math.floor(current)}${suffix}`)
+              ref.current.textContent = `${Math.floor(current)}${suffix}`
             }
 
             if (progress < 1) {
               requestAnimationFrame(frame)
             } else {
-              setDisplay(value)
+              ref.current.textContent = value
             }
           }
           requestAnimationFrame(frame)
@@ -88,7 +88,7 @@ function AnimatedCounter({ value, duration = 1600 }: { value: string; duration?:
     return () => observer.disconnect()
   }, [value, duration])
 
-  return <span ref={ref}>{display}</span>
+  return <span ref={ref} className="tabular-nums">{value}</span>
 }
 
 /* ─── Stat Band — clean responsive 2x2 grid on mobile ─────────────────── */
@@ -231,7 +231,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative lg:col-span-6" ref={imgRef}>
+          <div className="relative lg:col-span-6 will-change-transform" ref={imgRef}>
             <div className="img-mask relative overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.8)] aspect-[4/3] sm:aspect-[4/5]">
               <img
                 src={src('conference', 1200)}
