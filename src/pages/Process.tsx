@@ -1,6 +1,7 @@
 import { usePageMeta } from '../lib/meta'
 import { CtaBand, Eyebrow, PageHeader } from '../components/ui'
 import { src, type PhotoKey } from '../lib/img'
+import StageBeams from '../components/StageBeams'
 import { Check, Cpu, Sliders, Radio } from 'lucide-react'
 
 const detailedSteps = [
@@ -112,16 +113,16 @@ export default function Process() {
                   {s.title}
                 </h2>
 
-                <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-semibold text-slate-200">
+                <p data-reveal className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-semibold text-slate-200">
                   {s.lead}
                 </p>
 
-                <p className="mt-3 sm:mt-4 text-xs leading-relaxed text-muted">
+                <p data-reveal className="mt-3 sm:mt-4 text-xs leading-relaxed text-muted">
                   {s.text}
                 </p>
 
                 {/* Key Deliverables Checklist */}
-                <div className="mt-5 sm:mt-6 space-y-2 sm:space-y-2.5 rounded-xl border border-white/10 bg-white/[0.02] p-4 sm:p-5 backdrop-blur-sm">
+                <div data-reveal className="mt-5 sm:mt-6 space-y-2 sm:space-y-2.5 rounded-xl border border-white/10 bg-white/[0.02] p-4 sm:p-5 backdrop-blur-sm">
                   <span className="eyebrow !text-[0.58rem] sm:!text-[0.6rem] text-gold block mb-1">Phase Deliverables</span>
                   {s.deliverables.map((d) => (
                     <div key={d} className="flex items-center gap-2 sm:gap-2.5 text-xs text-slate-300">
@@ -157,9 +158,11 @@ export default function Process() {
         </ol>
       </section>
 
-      {/* 2. On-Site Production Redundancy Standard */}
+      {/* 2. On-Site Production Redundancy Standard with Theatrical Stage Beams */}
       <section className="section-y border-t border-white/10 bg-panel relative overflow-hidden">
-        <div className="container-x">
+        <StageBeams color="gold" intensity={0.35} direction="up" />
+
+        <div className="container-x relative z-10">
           <div className="mb-10 sm:mb-14">
             <Eyebrow>Fail-Safe Operations</Eyebrow>
             <h2 data-reveal className="display h-lg text-white">
@@ -171,7 +174,7 @@ export default function Process() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 md:grid-cols-3">
+          <div data-stagger className="grid gap-4 sm:gap-6 sm:grid-cols-2 md:grid-cols-3">
             {redundancyPillars.map((p) => {
               const Icon = p.icon
               return (

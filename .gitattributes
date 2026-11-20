@@ -1,4 +1,11 @@
 # Git LFS Tracking Rules
+# Public website static media MUST be served directly by Vercel/CDN without LFS
+public/**/*          -filter -diff -merge -text
+public/media/*       -filter -diff -merge -text
+public/media/*.mp4   -filter -diff -merge -text
+public/media/*.webm  -filter -diff -merge -text
+public/media/*.jpg   -filter -diff -merge -text
+
 # Generated for binary, large, and non-diffable file types
 
 # ---------------------------------------------------------------------------

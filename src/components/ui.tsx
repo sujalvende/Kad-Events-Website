@@ -5,26 +5,33 @@ import type { Project, Service } from '../data/content'
 import { TLink } from '../lib/transition'
 import Button from './Button'
 import Photo from './Photo'
+import StageBeams from './StageBeams'
 import type { PhotoKey } from '../lib/img'
 
 export const Eyebrow = ({ children }: { children: ReactNode }) => (
   <p data-reveal className="eyebrow mb-4 sm:mb-6 flex items-center gap-3 sm:gap-4 text-gold text-[0.62rem] sm:text-[0.68rem]">
-    <span className="h-0.5 w-7 sm:w-10 bg-gradient-to-r from-gold to-amber-200 shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+    <span data-line-reveal className="h-0.5 w-7 sm:w-10 bg-gradient-to-r from-gold to-amber-200 shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
     <span className="gold-gradient-text tracking-[0.25em] sm:tracking-[0.3em]">{children}</span>
   </p>
 )
 
-/** Top of every internal page. */
+/** Top of every internal page with volumetric ambient stage lighting. */
 export function PageHeader({ eyebrow, title, lead }: { eyebrow: string; title: ReactNode; lead?: string }) {
   return (
-    <header className="container-x relative pb-10 pt-28 sm:pb-16 sm:pt-36 md:pb-24 md:pt-52">
+    <header className="relative overflow-hidden pb-10 pt-28 sm:pb-16 sm:pt-36 md:pb-24 md:pt-52">
+      {/* Theatrical Stage Beams for subtle ambient grandeur */}
+      <StageBeams color="gold" intensity={0.45} direction="up" />
+
       {/* Soft ambient back-glow */}
       <div className="pointer-events-none absolute left-1/4 top-16 -z-10 h-64 w-64 rounded-full bg-gold/10 blur-[100px] sm:h-72 sm:w-72 sm:blur-[120px]" />
-      <Eyebrow>{eyebrow}</Eyebrow>
-      <h1 data-reveal className="display h-xl max-w-5xl tracking-tight">
-        {title}
-      </h1>
-      {lead && <p data-reveal className="mt-5 sm:mt-8 max-w-xl text-base sm:text-lg leading-relaxed text-slate-300">{lead}</p>}
+
+      <div className="container-x relative z-10">
+        <Eyebrow>{eyebrow}</Eyebrow>
+        <h1 data-reveal className="display h-xl max-w-5xl tracking-tight">
+          {title}
+        </h1>
+        {lead && <p data-reveal className="mt-5 sm:mt-8 max-w-xl text-base sm:text-lg leading-relaxed text-slate-300">{lead}</p>}
+      </div>
     </header>
   )
 }
@@ -122,7 +129,7 @@ export function ProjectCard({ p, className = '', ratio = 'aspect-[4/3]' }: { p: 
   )
 }
 
-/** Closing call to action used on every page except Contact. */
+/** Closing call to action with dramatic theatrical stage spotlight beams. */
 export function CtaBand({ photo = 'lights' as PhotoKey }) {
   return (
     <section className="relative overflow-hidden border-t border-line">
@@ -134,19 +141,22 @@ export function CtaBand({ photo = 'lights' as PhotoKey }) {
         decoding="async"
         width={1400}
         height={800}
-        className="absolute inset-0 h-full w-full object-cover opacity-25 saturate-125"
+        className="absolute inset-0 h-full w-full object-cover opacity-20 saturate-125"
         style={{ objectPosition: '50% 40%' }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/80 to-ink/60" />
 
+      {/* Theatrical Volumetric Stage Spotlight Beams — sweeping upward */}
+      <StageBeams color="gold" intensity={0.85} direction="up" />
+
       {/* Atmospheric center spotlight glow */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-72 w-72 sm:h-96 sm:w-96 rounded-full bg-gold/15 blur-[100px] sm:blur-[140px]" />
 
-      <div className="container-x py-10 sm:py-18 md:py-28 relative text-center">
+      <div className="container-x py-14 sm:py-20 md:py-32 relative z-10 text-center">
         <p className="eyebrow mb-4 sm:mb-6 inline-flex items-center gap-2.5 sm:gap-3 text-gold">
-          <span className="h-0.5 w-6 sm:w-8 bg-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+          <span data-line-reveal className="h-0.5 w-6 sm:w-8 bg-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
           <span className="gold-gradient-text tracking-[0.25em] sm:tracking-[0.3em]">Ready to begin</span>
-          <span className="h-0.5 w-6 sm:w-8 bg-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+          <span data-line-reveal className="h-0.5 w-6 sm:w-8 bg-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
         </p>
         <h2 data-reveal className="display h-lg mx-auto max-w-4xl text-white">
           Let's create something{' '}

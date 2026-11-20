@@ -43,6 +43,8 @@
   #root {
     width: 100%;
     max-width: 100%;
+    min-height: 100%;
+    overflow-x: clip;
   }
   ::selection {
     background: var(--color-gold);
@@ -135,6 +137,22 @@
 }
 .pulse-glow {
   animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* ─── Ambient breathing glow for atmospheric backgrounds ─────────────── */
+@keyframes ambientGlowPulse {
+  0%, 100% {
+    transform: scale(1) translate3d(0, 0, 0);
+    opacity: 0.12;
+  }
+  50% {
+    transform: scale(1.12) translate3d(15px, -10px, 0);
+    opacity: 0.22;
+  }
+}
+.ambient-glow {
+  animation: ambientGlowPulse 14s ease-in-out infinite alternate;
+  will-change: transform, opacity;
 }
 
 /* ─── Reduced motion ──────────────────────────────────────────────────── */

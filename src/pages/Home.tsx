@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useCallback } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, useCallback } from 'react'
 import { ArrowUpRight, ShieldCheck, Box, Radio, Crown } from 'lucide-react'
 import { reasons, projects, services } from '../data/content'
 import { usePageMeta } from '../lib/meta'
@@ -6,6 +6,7 @@ import { reducedMotion } from '../lib/animations'
 import { TLink } from '../lib/transition'
 import Button from '../components/Button'
 import Hero from '../components/Hero'
+import StageBeams from '../components/StageBeams'
 import { CtaBand, Eyebrow, ProjectCard, ServiceCard } from '../components/ui'
 import { src } from '../lib/img'
 
@@ -35,6 +36,61 @@ function SectionHead({
   )
 }
 
+/* ─── Animated Number Counter on Scroll ──────────────────────────────── */
+function AnimatedCounter({ value, duration = 1600 }: { value: string; duration?: number }) {
+  const [display, setDisplay] = useState(value)
+  const ref = useRef<HTMLSpanElement>(null)
+  const hasAnimated = useRef(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || reducedMotion()) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true
+          observer.disconnect()
+
+          const match = value.match(/^([\d.]+)(.*)$/)
+          if (!match) return
+          const targetNum = parseFloat(match[1])
+          const suffix = match[2]
+          const isDecimal = match[1].includes('.')
+          const startTime = performance.now()
+
+          const frame = (now: number) => {
+            const elapsed = now - startTime
+            const progress = Math.min(1, elapsed / duration)
+            // Ease out cubic
+            const ease = 1 - Math.pow(1 - progress, 3)
+            const current = targetNum * ease
+
+            if (isDecimal) {
+              setDisplay(`${current.toFixed(1)}${suffix}`)
+            } else {
+              setDisplay(`${Math.floor(current)}${suffix}`)
+            }
+
+            if (progress < 1) {
+              requestAnimationFrame(frame)
+            } else {
+              setDisplay(value)
+            }
+          }
+          requestAnimationFrame(frame)
+        }
+      },
+      { threshold: 0.15 }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [value, duration])
+
+  return <span ref={ref}>{display}</span>
+}
+
 /* ─── Stat Band — clean responsive 2x2 grid on mobile ─────────────────── */
 function StatBand() {
   const stats = [
@@ -44,17 +100,19 @@ function StatBand() {
     { n: '10+', label: 'Years of Production Mastery', sub: 'Enterprise & Fortune 500 partner' },
   ]
   return (
-    <section aria-label="Key figures" className="relative border-y border-white/10 bg-panel py-2 sm:py-4">
+    <section aria-label="Key figures" className="relative border-y border-white/10 bg-panel py-2 sm:py-4 overflow-hidden">
       <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-40 w-3/4 rounded-full bg-gold/5 blur-[100px]" />
       <div className="container-x py-6 sm:py-10">
-        <ul className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-4">
+        <ul data-stagger className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-4">
           {stats.map((s) => (
             <li
               key={s.label}
               className="group relative flex flex-col items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] p-4 sm:p-6 lg:p-8 text-center backdrop-blur-sm transition-all duration-500 hover:border-gold/40 hover:bg-white/[0.04] hover:shadow-[0_0_30px_rgba(212,175,55,0.15)]"
             >
               <span data-reveal className="display text-[1.8rem] sm:text-[2.6rem] leading-none text-white transition-transform duration-500 group-hover:scale-105 lg:text-[4.2rem]">
-                <span className="gold-gradient-text font-serif">{s.n}</span>
+                <span className="gold-gradient-text font-serif">
+                  <AnimatedCounter value={s.n} />
+                </span>
               </span>
               <span className="eyebrow mt-2.5 sm:mt-4 text-[0.58rem] sm:text-[0.68rem] text-slate-200 font-bold leading-snug">{s.label}</span>
               <span className="mt-1 text-[0.65rem] sm:text-xs text-muted line-clamp-1 sm:line-clamp-none">{s.sub}</span>
@@ -141,10 +199,13 @@ export default function Home() {
       {/* 2. Marquee ticker */}
       <Marquee />
 
-      {/* 3. Brand Introduction */}
+      {/* 3. Brand Introduction with Volumetric Stage Spotlights */}
       <section className="relative overflow-hidden py-16 sm:py-24 lg:py-32 bg-ink">
+        {/* Theatrical volumetric stage spotlight rays */}
+        <StageBeams color="gold" intensity={0.4} direction="up" />
+
         <div className="pointer-events-none absolute -left-20 top-20 h-72 w-72 sm:h-96 sm:w-96 rounded-full bg-gold/10 blur-[120px] sm:blur-[140px]" />
-        <div className="container-x grid items-center gap-10 sm:gap-16 lg:grid-cols-12">
+        <div className="container-x relative z-10 grid items-center gap-10 sm:gap-16 lg:grid-cols-12">
           <div className="lg:col-span-6">
             <Eyebrow>Experiential Production Agency</Eyebrow>
             <h2 data-reveal className="display h-lg text-white">
@@ -200,11 +261,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. Stat Band */}
+      {/* 4. Stat Band with Animated Numbers */}
       <StatBand />
 
       {/* 5. 3D Event Environment */}
-      <section className="relative bg-ink pt-12 sm:pt-20" aria-label="3D event environment">
+      <section className="relative bg-ink pt-12 sm:pt-20 overflow-hidden" aria-label="3D event environment">
         <div className="container-x mb-8 sm:mb-10">
           <div className="flex flex-col justify-between gap-4 sm:gap-6 md:flex-row md:items-end">
             <div>
@@ -239,7 +300,7 @@ export default function Home() {
             to="/process"
             cta="How We Deliver"
           />
-          <div className="mt-10 sm:mt-16 grid gap-3 sm:gap-5 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
+          <div data-stagger className="mt-10 sm:mt-16 grid gap-3 sm:gap-5 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
             {standards.map((st) => {
               const Icon = st.icon
               return (
@@ -268,7 +329,7 @@ export default function Home() {
       </section>
 
       {/* 7. Services Overview */}
-      <section className="section-y bg-ink border-t border-white/10 relative">
+      <section className="section-y bg-ink border-t border-white/10 relative overflow-hidden">
         <div className="pointer-events-none absolute left-1/3 top-1/2 -translate-y-1/2 h-80 w-80 rounded-full bg-gold/10 blur-[140px]" />
         <div className="container-x">
           <SectionHead
@@ -286,7 +347,7 @@ export default function Home() {
       </section>
 
       {/* 8. Featured Projects */}
-      <section className="section-y border-t border-white/10 bg-panel">
+      <section className="section-y border-t border-white/10 bg-panel overflow-hidden">
         <div className="container-x">
           <SectionHead
             eyebrow="Selected Portfolio"
@@ -303,9 +364,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 9. Why KAD Events */}
-      <section className="section-y border-t border-white/10 bg-ink">
-        <div className="container-x grid gap-10 sm:gap-14 lg:grid-cols-12">
+      {/* 9. Why KAD Events with Theatrical Atmosphere */}
+      <section className="section-y border-t border-white/10 bg-ink relative overflow-hidden">
+        {/* Subtle theatrical stage spotlight beams */}
+        <StageBeams color="gold" intensity={0.3} direction="up" />
+
+        <div className="container-x relative z-10 grid gap-10 sm:gap-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Eyebrow>The KAD Advantage</Eyebrow>
             <h2 data-reveal className="display h-lg text-white">
@@ -351,7 +415,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-ink via-transparent to-ink" />
       </section>
 
-      {/* 11. CTA */}
+      {/* 11. CTA with sweeping theatrical spotlight beams */}
       <CtaBand />
     </>
   )

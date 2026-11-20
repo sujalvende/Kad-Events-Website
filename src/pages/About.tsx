@@ -2,6 +2,7 @@ import { usePageMeta } from '../lib/meta'
 import { CtaBand, Eyebrow, PageHeader } from '../components/ui'
 import { src, type PhotoKey } from '../lib/img'
 import Button from '../components/Button'
+import StageBeams from '../components/StageBeams'
 import { ArrowUpRight, Award, Globe2 } from 'lucide-react'
 
 const formats: { title: string; desc: string; photo: PhotoKey; tag: string }[] = [
@@ -132,7 +133,7 @@ export default function About() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
+          <div data-stagger className="grid gap-4 sm:gap-6 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
             {formats.map((f) => (
               <div
                 key={f.title}
@@ -151,16 +152,8 @@ export default function About() {
                   </span>
                 </div>
                 <div className="p-4 sm:p-6">
-                  <h3 className="display text-xl sm:text-2xl text-white group-hover:text-gold transition-colors">
-                    {f.title}
-                  </h3>
-                  <p className="mt-2.5 sm:mt-3 text-xs leading-relaxed text-slate-300">
-                    {f.desc}
-                  </p>
-                  <div className="mt-5 sm:mt-6 border-t border-white/10 pt-3 sm:pt-4 flex items-center justify-between text-[0.65rem] sm:text-[0.68rem] font-bold uppercase tracking-widest text-gold">
-                    <span>Full Production</span>
-                    <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </div>
+                  <h3 className="display text-xl sm:text-2xl text-white group-hover:text-gold transition-colors">{f.title}</h3>
+                  <p className="mt-2 text-xs text-muted leading-relaxed">{f.desc}</p>
                 </div>
               </div>
             ))}
@@ -168,24 +161,27 @@ export default function About() {
         </div>
       </section>
 
-      {/* 3. Executive Production Leadership */}
-      <section className="section-y bg-ink border-t border-white/10 relative">
-        <div className="container-x">
-          <div className="mb-10 sm:mb-16">
-            <Eyebrow>Executive Direction</Eyebrow>
-            <h2 data-reveal className="display h-lg text-white max-w-2xl">
-              Led by seasoned <span className="italic gold-gradient-text font-serif">industry authorities.</span>
-            </h2>
-            <p className="mt-3 sm:mt-4 max-w-xl text-sm sm:text-base text-slate-300">
+      {/* 3. Leadership & Vision with Theatrical Stage Beams */}
+      <section className="section-y border-t border-white/10 bg-ink relative overflow-hidden">
+        <StageBeams color="gold" intensity={0.4} direction="up" />
+
+        <div className="container-x relative z-10">
+          <div className="flex flex-col justify-between gap-4 sm:gap-6 md:flex-row md:items-end mb-10 sm:mb-16">
+            <div>
+              <Eyebrow>Executive Producers</Eyebrow>
+              <h2 data-reveal className="display h-lg text-white">
+                Leadership on the <span className="italic gold-gradient-text font-serif">frontline.</span>
+              </h2>
+            </div>
+            <p className="max-w-md text-sm text-slate-300 leading-relaxed">
               Our directors have helmed some of the most complex corporate staging environments in the world.
             </p>
           </div>
 
-          <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 md:grid-cols-3">
+          <div data-stagger className="grid gap-6 sm:gap-8 sm:grid-cols-2 md:grid-cols-3">
             {leadership.map((l) => (
               <div
                 key={l.name}
-                data-reveal
                 className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6 backdrop-blur-sm transition-all duration-500 hover:border-gold/50 hover:bg-white/[0.04] hover:shadow-[0_10px_35px_-5px_rgba(212,175,55,0.2)]"
               >
                 <div>
@@ -224,7 +220,7 @@ export default function About() {
             </h2>
           </div>
 
-          <div className="grid gap-4 sm:gap-6 grid-cols-2 lg:grid-cols-4">
+          <div data-stagger className="grid gap-4 sm:gap-6 grid-cols-2 lg:grid-cols-4">
             {globalHubs.map((h) => (
               <div
                 key={h.city}

@@ -17,10 +17,10 @@ export default function Work() {
         title={
           <>
             Selected{' '}
-            <span className="italic text-gold">projects.</span>
+            <span className="italic gold-gradient-text font-serif">productions.</span>
           </>
         }
-        lead="A selection of events designed, produced and delivered by KAD Events."
+        lead="A curated portfolio of global summits, monumental reveals, and private leadership galas architected and produced by KAD Events."
       />
 
       <section className="container-x pb-16 sm:pb-24 lg:pb-32">
@@ -46,8 +46,8 @@ export default function Work() {
           ))}
         </div>
 
-        {/* Grid */}
-        <div className="grid gap-4 md:grid-cols-2">
+        {/* Staggered Portfolio Grid */}
+        <div data-stagger className="grid gap-4 sm:gap-6 md:grid-cols-2">
           {list.map((p, i) => (
             <ProjectCard
               key={p.slug}

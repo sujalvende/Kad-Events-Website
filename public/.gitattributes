@@ -1,2 +1,7 @@
-# AgentPlat packages this default favicon directly from source without LFS hydration.
+# Package all public media directly from source without Git LFS so Vercel can serve real videos
+* -filter -diff -merge
+media/* -filter -diff -merge
+media/hero.mp4 -filter -diff -merge
+media/hero.webm -filter -diff -merge
+media/poster.jpg -filter -diff -merge
 favicon.png -filter -diff -merge -text

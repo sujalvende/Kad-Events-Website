@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router'
 import { contact, serviceEventType } from '../data/content'
 import { usePageMeta } from '../lib/meta'
 import ContactForm from '../components/ContactForm'
+import StageBeams from '../components/StageBeams'
 import { Eyebrow } from '../components/ui'
 import { src, type PhotoKey } from '../lib/img'
 
@@ -70,35 +71,39 @@ export default function Contact() {
 
   return (
     <>
-      {/* 1. Header with Atmospheric Lighting */}
-      <header className="container-x relative pb-10 pt-28 sm:pb-16 sm:pt-36 md:pb-20 md:pt-52">
+      {/* 1. Header with Theatrical Volumetric Stage Spotlight Beams */}
+      <header className="relative overflow-hidden pb-10 pt-28 sm:pb-16 sm:pt-36 md:pb-20 md:pt-52">
+        <StageBeams color="gold" intensity={0.65} direction="up" />
         <div className="pointer-events-none absolute left-1/4 top-16 -z-10 h-64 w-64 rounded-full bg-gold/10 blur-[100px] sm:h-72 sm:w-72 sm:blur-[130px]" />
-        <Eyebrow>Direct Inquiries</Eyebrow>
-        <h1 data-reveal className="display h-xl max-w-4xl text-white">
-          Let's discuss your next{' '}
-          <span className="italic gold-gradient-text font-serif">global production.</span>
-        </h1>
-        <p data-reveal className="mt-5 sm:mt-8 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300">
-          Whether planning an international keynote summit, a tier-1 product reveal,
-          or a milestone leadership gala, our executive production directors are at your disposal.
-        </p>
 
-        {/* Mobile Quick Tap Action Bar */}
-        <div className="mt-6 flex flex-col xs:flex-row gap-2.5 sm:hidden" data-reveal>
-          <a
-            href={`tel:${contact.phone.replace(/\s/g, '')}`}
-            className="flex items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-gold shadow-[0_0_20px_rgba(212,175,55,0.2)]"
-          >
-            <Phone size={13} />
-            <span>Call Executive Line</span>
-          </a>
-          <a
-            href={`mailto:${contact.email}`}
-            className="flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-200 hover:border-gold hover:text-gold"
-          >
-            <Mail size={13} className="text-gold" />
-            <span>Direct Email</span>
-          </a>
+        <div className="container-x relative z-10">
+          <Eyebrow>Direct Inquiries</Eyebrow>
+          <h1 data-reveal className="display h-xl max-w-4xl text-white">
+            Let's discuss your next{' '}
+            <span className="italic gold-gradient-text font-serif">global production.</span>
+          </h1>
+          <p data-reveal className="mt-5 sm:mt-8 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300">
+            Whether planning an international keynote summit, a tier-1 product reveal,
+            or a milestone leadership gala, our executive production directors are at your disposal.
+          </p>
+
+          {/* Mobile Quick Tap Action Bar */}
+          <div className="mt-6 flex flex-col xs:flex-row gap-2.5 sm:hidden" data-reveal>
+            <a
+              href={`tel:${contact.phone.replace(/\s/g, '')}`}
+              className="flex items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-gold shadow-[0_0_20px_rgba(212,175,55,0.2)]"
+            >
+              <Phone size={13} />
+              <span>Call Executive Line</span>
+            </a>
+            <a
+              href={`mailto:${contact.email}`}
+              className="flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-200 hover:border-gold hover:text-gold"
+            >
+              <Mail size={13} className="text-gold" />
+              <span>Direct Email</span>
+            </a>
+          </div>
         </div>
       </header>
 
@@ -182,64 +187,76 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* 3. The Production Engagement Sequence */}
-      <section className="section-y border-t border-white/10 bg-panel relative overflow-hidden">
+      {/* 3. Global Operation Hubs */}
+      <section className="section-y border-t border-white/10 bg-panel">
         <div className="container-x">
-          <div className="mb-10 sm:mb-14">
-            <Eyebrow>The Engagement Protocol</Eyebrow>
-            <h2 data-reveal className="display h-lg text-white">
-              What happens <span className="italic gold-gradient-text font-serif">next.</span>
-            </h2>
+          <div className="flex flex-col justify-between gap-4 sm:gap-6 md:flex-row md:items-end">
+            <div>
+              <Eyebrow>Presence</Eyebrow>
+              <h2 data-reveal className="display h-lg text-white">International Production Hubs.</h2>
+            </div>
+            <p className="max-w-md text-sm text-slate-300 leading-relaxed">
+              Operating with permanent leadership hubs in the world's commercial capitals.
+            </p>
           </div>
 
-          <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
-            {protocol.map((step) => (
+          <div data-stagger className="mt-10 sm:mt-16 grid gap-4 sm:gap-6 md:grid-cols-3">
+            {hubs.map((h) => (
               <div
-                key={step.step}
-                className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 sm:p-6 md:p-8 backdrop-blur-sm transition-all hover:border-gold/40"
+                key={h.city}
+                className="group overflow-hidden rounded-2xl border border-white/10 bg-card transition-all duration-500 hover:border-gold/40 hover:shadow-[0_10px_35px_-5px_rgba(212,175,55,0.15)]"
               >
-                <span className="display text-4xl sm:text-5xl font-serif text-gold/60">{step.step}</span>
-                <h3 className="display mt-3 sm:mt-4 text-xl sm:text-2xl text-white">{step.title}</h3>
-                <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed">{step.desc}</p>
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <img
+                    src={src(h.photo, 800)}
+                    alt={`${h.city} skyline & office`}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+                  <span className="absolute bottom-3 left-4 eyebrow text-gold font-bold">
+                    {h.district}
+                  </span>
+                </div>
+                <div className="p-5 sm:p-7">
+                  <h3 className="display text-2xl sm:text-3xl text-white group-hover:text-gold transition-colors">{h.city}</h3>
+                  <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5 text-xs text-slate-300">
+                    <p className="flex items-center gap-2">
+                      <Phone size={13} className="text-gold shrink-0" />
+                      <span>{h.phone}</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Mail size={13} className="text-gold shrink-0" />
+                      <span>{h.email}</span>
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4. Global Production Hubs */}
-      <section className="section-y border-t border-white/10 bg-ink relative">
-        <div className="container-x">
-          <div className="mb-10 sm:mb-14">
-            <Eyebrow>Physical Presence</Eyebrow>
+      {/* 4. The KAD Production Protocol */}
+      <section className="section-y border-t border-white/10 bg-ink relative overflow-hidden">
+        <StageBeams color="gold" intensity={0.25} direction="up" />
+        <div className="container-x relative z-10">
+          <div className="max-w-2xl">
+            <Eyebrow>Methodology</Eyebrow>
             <h2 data-reveal className="display h-lg text-white">
-              Executive production <span className="italic gold-gradient-text font-serif">hubs.</span>
+              The 3-Stage <span className="italic gold-gradient-text font-serif">Delivery Protocol.</span>
             </h2>
           </div>
 
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 xs:grid-cols-2 md:grid-cols-3">
-            {hubs.map((hub) => (
+          <div data-stagger className="mt-10 sm:mt-16 grid gap-6 md:grid-cols-3">
+            {protocol.map((p) => (
               <div
-                key={hub.city}
-                className="group overflow-hidden rounded-2xl border border-white/10 bg-card transition-all hover:border-gold/40"
+                key={p.step}
+                className="relative rounded-xl border border-white/10 bg-white/[0.02] p-6 sm:p-8 backdrop-blur-sm"
               >
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <img
-                    src={src(hub.photo, 800)}
-                    alt={hub.city}
-                    loading="lazy"
-                    className="h-full w-full object-cover saturate-[1.1] transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
-                  <span className="absolute bottom-3 left-4 text-xs font-bold uppercase tracking-wider text-white">
-                    {hub.district}
-                  </span>
-                </div>
-                <div className="p-4 sm:p-6 space-y-2">
-                  <h3 className="display text-xl sm:text-2xl md:text-3xl text-white">{hub.city}</h3>
-                  <p className="text-xs sm:text-sm text-slate-300">{hub.phone}</p>
-                  <p className="text-xs text-muted">{hub.email}</p>
-                </div>
+                <span className="eyebrow text-gold font-bold text-sm">{p.step}</span>
+                <h3 className="display mt-3 text-xl sm:text-2xl text-white">{p.title}</h3>
+                <p className="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed">{p.desc}</p>
               </div>
             ))}
           </div>
@@ -247,29 +264,29 @@ export default function Contact() {
       </section>
 
       {/* 5. Production FAQs */}
-      <section className="section-y border-t border-white/10 bg-panel relative overflow-hidden">
+      <section className="section-y border-t border-white/10 bg-panel">
         <div className="container-x max-w-4xl">
-          <div className="text-center mb-10 sm:mb-14">
-            <Eyebrow>Executive FAQs</Eyebrow>
-            <h2 data-reveal className="display h-lg text-white">
-              Frequently asked <span className="italic gold-gradient-text font-serif">questions.</span>
-            </h2>
+          <div className="text-center">
+            <Eyebrow>Inquiry Intelligence</Eyebrow>
+            <h2 data-reveal className="display h-lg text-white">Frequently Addressed Inquiries.</h2>
           </div>
 
-          <div className="space-y-4">
+          <div className="mt-10 sm:mt-14 space-y-4">
             {faqs.map((f, i) => (
-              <div
+              <details
                 key={i}
-                className="rounded-xl border border-white/10 bg-white/[0.02] p-5 sm:p-7 backdrop-blur-sm transition-all hover:border-gold/30"
+                className="group rounded-xl border border-white/10 bg-card p-5 sm:p-7 transition-all [&_summary::-webkit-details-marker]:hidden"
               >
-                <div className="flex items-start gap-3">
-                  <HelpCircle size={18} className="text-gold shrink-0 mt-1" />
-                  <div>
-                    <h3 className="display text-lg sm:text-xl text-white">{f.q}</h3>
-                    <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">{f.a}</p>
-                  </div>
-                </div>
-              </div>
+                <summary className="flex cursor-pointer items-center justify-between text-base sm:text-lg font-medium text-white hover:text-gold transition-colors">
+                  <span className="pr-4">{f.q}</span>
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-white/10 text-gold transition-transform duration-300 group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-4 pt-4 border-t border-white/10 text-xs sm:text-sm leading-relaxed text-slate-300">
+                  {f.a}
+                </p>
+              </details>
             ))}
           </div>
         </div>
