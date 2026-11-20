@@ -265,7 +265,7 @@ export default function Home() {
       <StatBand />
 
       {/* 5. 3D Event Environment */}
-      <section className="relative bg-ink pt-12 sm:pt-20 overflow-hidden" aria-label="3D event environment">
+      <section className="relative bg-ink pt-12 sm:pt-20 overflow-x-clip" aria-label="3D event environment">
         <div className="container-x mb-8 sm:mb-10">
           <div className="flex flex-col justify-between gap-4 sm:gap-6 md:flex-row md:items-end">
             <div>
