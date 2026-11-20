@@ -167,6 +167,7 @@ export default function Home() {
   )
 
   const imgRef = useRef<HTMLDivElement>(null)
+  const secRef = useRef<HTMLElement | null>(null)
   const ticking = useRef(false)
 
   const onScroll = useCallback(() => {
@@ -174,7 +175,10 @@ export default function Home() {
     ticking.current = true
     requestAnimationFrame(() => {
       if (imgRef.current) {
-        const sec = imgRef.current.closest('section')
+        if (!secRef.current) {
+          secRef.current = imgRef.current.closest('section')
+        }
+        const sec = secRef.current
         if (sec) {
           const rect = sec.getBoundingClientRect()
           const progress = -rect.top / (sec.offsetHeight + window.innerHeight)

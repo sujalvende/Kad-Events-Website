@@ -110,32 +110,39 @@ export default function InteractiveStage() {
     return () => observer.disconnect()
   }, [])
 
-  // Native scroll handler
+  // Throttled native scroll handler — only calculates when visible on screen
+  const tickingRef = useRef(false)
   const handleScroll = useCallback(() => {
     const el = trackRef.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    const totalHeight = el.offsetHeight - window.innerHeight
-    if (totalHeight <= 0) return
+    if (!el || !isOnScreen) return
+    if (tickingRef.current) return
+    tickingRef.current = true
 
-    const scrolled = -rect.top
-    const p = Math.max(0, Math.min(1, scrolled / totalHeight))
-    setScrollProgress(p)
+    requestAnimationFrame(() => {
+      if (!trackRef.current) {
+        tickingRef.current = false
+        return
+      }
+      const rect = trackRef.current.getBoundingClientRect()
+      const totalHeight = trackRef.current.offsetHeight - window.innerHeight
+      if (totalHeight > 0) {
+        const scrolled = -rect.top
+        const p = Math.max(0, Math.min(1, scrolled / totalHeight))
+        setScrollProgress(p)
 
-    const newMood: StageMood = p < 0.33 ? 'gala' : p < 0.68 ? 'summit' : 'launch'
-    if (newMood !== moodRef.current) {
-      moodRef.current = newMood
-      setMood(newMood)
-    }
-  }, [])
+        const newMood: StageMood = p < 0.33 ? 'gala' : p < 0.68 ? 'summit' : 'launch'
+        if (newMood !== moodRef.current) {
+          moodRef.current = newMood
+          setMood(newMood)
+        }
+      }
+      tickingRef.current = false
+    })
+  }, [isOnScreen])
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true })
-    const unbind = globalLenis?.on('scroll', handleScroll)
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      unbind?.()
-    }
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
   const jumpToPhase = (id: StageMood) => {

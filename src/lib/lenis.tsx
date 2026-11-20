@@ -42,28 +42,23 @@ export function useLenis() {
     if (lenisRef.current) return
 
     const lenis = new Lenis({
-      duration: 1.4,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // expo ease-out
+      lerp: 0.09,               // Silky smooth momentum without floaty lag
+      wheelMultiplier: 1.0,     // 1:1 natural wheel & trackpad response
       smoothWheel: true,
-      syncTouch: false,         // native momentum on mobile, smooth on desktop
-      touchMultiplier: 2,
+      syncTouch: false,         // Native touch momentum on mobile, smooth on desktop
       infinite: false,
-      autoRaf: false,           // we drive raf manually via GSAP ticker
+      autoRaf: true,            // Direct native RAF loop bound to display refresh rate
     })
 
     lenisRef.current = lenis
     globalLenis = lenis
 
     // Keep GSAP ScrollTrigger in sync with Lenis
-    lenis.on('scroll', ScrollTrigger.update)
-
-    // Drive Lenis via GSAP's ticker for perfect frame sync
-    const onTick = (time: number) => lenis.raf(time * 1000)
-    gsap.ticker.add(onTick)
-    gsap.ticker.lagSmoothing(0) // prevent large jumps after tab switch
+    lenis.on('scroll', () => {
+      ScrollTrigger.update()
+    })
 
     return () => {
-      gsap.ticker.remove(onTick)
       lenis.destroy()
       lenisRef.current = null
       globalLenis = null

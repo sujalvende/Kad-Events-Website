@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Sparkles, Mail, Phone, ArrowUpRight } from 'lucide-react'
 import { useLocation } from 'react-router'
 import { nav, contact, services } from '../data/content'
@@ -17,19 +17,32 @@ export function Logo({ className = '' }: { className?: string }) {
 export default function Navbar() {
   const { pathname } = useLocation()
   const home = pathname === '/'
+  const scrolledRef = useRef(false)
   const [scrolled, setScrolled] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
   const [open, setOpen] = useState(false)
+  const progressRef = useRef<HTMLDivElement>(null)
 
-  // Scroll listener for translucent -> solid background & hairline progress indicator
+  // High-performance scroll listener: GPU-accelerated hairline, state flips only on boundary
   useEffect(() => {
+    let ticking = false
     const on = () => {
-      const scrollY = window.scrollY
-      setScrolled(scrollY > 40)
-      const total = document.documentElement.scrollHeight - window.innerHeight
-      if (total > 0) {
-        setScrollProgress(Math.min(1, Math.max(0, scrollY / total)))
-      }
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY
+        const isPast = scrollY > 40
+        if (isPast !== scrolledRef.current) {
+          scrolledRef.current = isPast
+          setScrolled(isPast)
+        }
+
+        if (progressRef.current) {
+          const total = document.documentElement.scrollHeight - window.innerHeight
+          const p = total > 0 ? Math.min(1, Math.max(0, scrollY / total)) : 0
+          progressRef.current.style.transform = `scaleX(${p})`
+        }
+        ticking = false
+      })
     }
     on()
     window.addEventListener('scroll', on, { passive: true })
@@ -149,10 +162,11 @@ export default function Navbar() {
 
         {/* Minimal luxury scroll progress hairline */}
         <div
+          ref={progressRef}
           aria-hidden
-          className="absolute bottom-0 left-0 h-[1.5px] bg-gradient-to-r from-gold via-amber-300 to-gold transition-opacity duration-300 ease-out shadow-[0_0_8px_rgba(212,175,55,0.8)] pointer-events-none"
+          className="absolute bottom-0 left-0 h-[1.5px] w-full origin-left bg-gradient-to-r from-gold via-amber-300 to-gold transition-opacity duration-300 ease-out shadow-[0_0_8px_rgba(212,175,55,0.8)] pointer-events-none will-change-transform"
           style={{
-            width: `${scrollProgress * 100}%`,
+            transform: 'scaleX(0)',
             opacity: scrolled ? 1 : 0,
           }}
         />
