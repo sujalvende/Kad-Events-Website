@@ -6,6 +6,7 @@ export const nav = [
   { label: 'Services', to: '/services' },
   { label: 'Our Work', to: '/work' },
   { label: 'Our Process', to: '/process' },
+  { label: 'Clients', to: '/clients' },
   { label: 'Contact', to: '/contact' },
 ]
 

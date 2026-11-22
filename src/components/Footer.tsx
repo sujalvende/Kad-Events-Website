@@ -85,10 +85,16 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom copyright */}
+        {/* Bottom copyright & executive portal access */}
         <div className="mt-12 flex flex-col gap-2 border-t border-line pt-6 text-xs text-muted/70 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} KAD Events. All rights reserved.</p>
-          <p className="text-[0.7rem]">International Experiential Production</p>
+          <p>© {new Date().getFullYear()} KAD Events Pvt. Ltd. Corporate Event Management Division.</p>
+          <div className="flex items-center gap-4 text-[0.7rem]">
+            <span>International Experiential Production</span>
+            <span className="text-line">·</span>
+            <TLink to="/admin/login" className="hover:text-gold transition-colors text-muted/60">
+              Executive Portal
+            </TLink>
+          </div>
         </div>
       </div>
     </footer>

@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone, ArrowUpRight, HelpCircle } from 'lucide-react'
+import { Mail, MapPin, Phone, ArrowUpRight, HelpCircle, MessageSquare } from 'lucide-react'
 import { useSearchParams } from 'react-router'
 import { contact, serviceEventType } from '../data/content'
 import { usePageMeta } from '../lib/meta'
@@ -136,6 +136,22 @@ export default function Contact() {
                     className="display text-2xl sm:text-3xl text-white transition-colors hover:text-gold"
                   >
                     {contact.phone}
+                  </a>
+                </div>
+
+                <div>
+                  <span className="text-[0.62rem] sm:text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted block mb-1">
+                    Executive WhatsApp Desk
+                  </span>
+                  <a
+                    href="https://wa.me/442079460912?text=Hello%20KAD%20Events%20team%2C%20I%20would%20like%20to%20enquire%20about%20a%20corporate%20event%20production."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-emerald-400 hover:bg-emerald-500/20 transition-colors shadow-[0_0_20px_rgba(16,185,129,0.15)]"
+                  >
+                    <MessageSquare size={14} />
+                    <span>Direct WhatsApp Chat</span>
+                    <ArrowUpRight size={13} />
                   </a>
                 </div>
 

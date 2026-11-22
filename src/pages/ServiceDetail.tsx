@@ -7,9 +7,15 @@ import { ServiceCard, Eyebrow } from '../components/ui'
 import { src } from '../lib/img'
 import NotFound from './NotFound'
 
+const slugAliases: Record<string, string> = {
+  conferences: 'conferences-summits',
+  exhibitions: 'exhibitions-trade-shows',
+}
+
 export default function ServiceDetail() {
   const { slug } = useParams()
-  const idx = services.findIndex((s) => s.slug === slug)
+  const resolvedSlug = (slug && slugAliases[slug]) || slug
+  const idx = services.findIndex((s) => s.slug === resolvedSlug)
   const s = services[idx]
   usePageMeta(s?.title ?? 'Not found', s?.intro ?? '')
   if (!s) return <NotFound />

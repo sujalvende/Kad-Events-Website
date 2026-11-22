@@ -4,6 +4,7 @@ import { useLocation } from 'react-router'
 import { nav, contact, services } from '../data/content'
 import { TLink } from '../lib/transition'
 import Button from './Button'
+import LetsTalkButton from './LetsTalkButton'
 
 export function Logo({ className = '' }: { className?: string }) {
   return (
@@ -107,19 +108,9 @@ export default function Navbar() {
 
           {/* Right Action: Let's Talk Button for Desktop, Hamburger Drawer for Mobile */}
           <div className="flex items-center gap-3 shrink-0">
-            {/* Desktop Direct CTA: Primary Solid Gold Sharp-Edged Button with Slide-Fill & Magnetic Animation */}
-            <div className="relative hidden lg:inline-flex items-center">
-              {/* Soft ambient golden back-glow */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 -inset-x-2 -inset-y-1 bg-gold/25 blur-xl transition-opacity duration-500"
-              />
-              <Button
-                to="/contact"
-                className="relative !min-h-[38px] !px-6 !py-2.5 text-[0.68rem] tracking-[0.24em] font-semibold text-ink bg-gold shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_35px_rgba(212,175,55,0.7)]"
-              >
-                Let's Talk
-              </Button>
+            {/* Desktop Direct CTA: Faithful replica of architectural LET'S TALK ↗ gold button */}
+            <div className="hidden lg:inline-flex items-center">
+              <LetsTalkButton to="/contact" />
             </div>
 
             {/* Mobile / Tablet: Hamburger Menu Button (hidden on desktop) */}

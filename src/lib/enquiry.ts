@@ -1,12 +1,14 @@
+import { saveEnquiry } from './admin-store'
+
 export type Enquiry = Record<'name' | 'company' | 'email' | 'phone' | 'type' | 'date' | 'attendees' | 'location' | 'notes', string>
 
 /**
- * Submission hook point. No backend is connected yet, so this simulates a
- * network request. Replace the body with a real API call (e.g. fetch to an
- * endpoint or email service) and throw on failure to surface the error state.
+ * Submission hook point. Persists into KAD Events executive admin store,
+ * and simulates network request or connects to real API endpoint.
  */
-export async function submitEnquiry(_data: Enquiry): Promise<void> {
-  await new Promise((r) => setTimeout(r, 1400))
+export async function submitEnquiry(data: Enquiry): Promise<void> {
+  await new Promise((r) => setTimeout(r, 1200))
+  saveEnquiry(data)
 }
 
 export function validate(d: Enquiry): Partial<Record<keyof Enquiry, string>> {
