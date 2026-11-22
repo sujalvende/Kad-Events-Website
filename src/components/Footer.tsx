@@ -1,4 +1,4 @@
-import { AtSign, BriefcaseBusiness, Users, Play } from 'lucide-react'
+import { AtSign, BriefcaseBusiness, Users, Play, Lock } from 'lucide-react'
 import { contact, nav, services } from '../data/content'
 import { TLink } from '../lib/transition'
 import { Logo } from './Navbar'
@@ -50,6 +50,12 @@ export default function Footer() {
                     </TLink>
                   </li>
                 ))}
+                <li>
+                  <TLink to="/admin" className="inline-flex items-center gap-1.5 text-xs text-gold/80 transition-colors hover:text-gold pt-1">
+                    <Lock size={12} className="text-gold" />
+                    <span>Admin Dashboard</span>
+                  </TLink>
+                </li>
               </ul>
             </nav>
 
@@ -85,14 +91,18 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom copyright & executive portal access */}
-        <div className="mt-12 flex flex-col gap-2 border-t border-line pt-6 text-xs text-muted/70 sm:flex-row sm:items-center sm:justify-between">
+        {/* Bottom copyright & executive admin portal access */}
+        <div className="mt-12 flex flex-col gap-3 border-t border-line pt-6 text-xs text-muted/70 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} KAD Events Pvt. Ltd. Corporate Event Management Division.</p>
-          <div className="flex items-center gap-4 text-[0.7rem]">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[0.7rem]">
             <span>International Experiential Production</span>
-            <span className="text-line">·</span>
-            <TLink to="/admin/login" className="hover:text-gold transition-colors text-muted/60">
-              Executive Portal
+            <span className="text-line hidden sm:inline">·</span>
+            <TLink
+              to="/admin"
+              className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-gold hover:bg-gold hover:text-ink transition-colors font-semibold"
+            >
+              <Lock size={11} />
+              <span>Admin Portal</span>
             </TLink>
           </div>
         </div>
