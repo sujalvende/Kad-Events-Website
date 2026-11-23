@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, useRouteError, Link, Navigate } from 'react-router'
+import { createBrowserRouter, useRouteError, Link } from 'react-router'
 import Layout from '../components/Layout'
 
 // Public website pages lazy-loaded for route-level code splitting

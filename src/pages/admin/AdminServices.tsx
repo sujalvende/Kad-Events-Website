@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Layers, CheckCircle2, Eye, ShieldCheck, Tag } from 'lucide-react'
+import { CheckCircle2, ShieldCheck } from 'lucide-react'
 import { services as initialServices, type Service } from '../../data/content'
 
 export default function AdminServices() {

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { Sparkles, Mail, Phone, ArrowUpRight } from 'lucide-react'
+import { Mail, Phone, ArrowUpRight } from 'lucide-react'
 import { useLocation } from 'react-router'
 import { nav, contact, services } from '../data/content'
 import { TLink } from '../lib/transition'
@@ -319,7 +319,6 @@ export default function Navbar() {
 
             <div className={open ? 'drawer-stagger-6' : ''}>
               <Button to="/contact" className="w-full shadow-[0_0_30px_rgba(212,175,55,0.35)] touch-feedback">
-                <Sparkles size={14} className="mr-1.5 text-ink" />
                 Start A Conversation
               </Button>
             </div>

@@ -1,12 +1,12 @@
 import { lazy, Suspense, useState, useRef, useEffect, useCallback } from 'react'
-import { Sparkles, Zap, Flame, ChevronDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { reducedMotion } from '../lib/animations'
 import { globalLenis } from '../lib/lenis'
 import type { StageMood } from './ThreeDStage'
 import { src } from '../lib/img'
 
 // Trigger chunk preload immediately when InteractiveStage.tsx is imported
-const _preload = import('./ThreeDStage').catch(() => {})
+import('./ThreeDStage').catch(() => {})
 
 // Lazy-load the heavy 3D scene — pre-warmed in background
 const ThreeDStage = lazy(() => import('./ThreeDStage'))
@@ -37,36 +37,36 @@ export default function InteractiveStage() {
   const moodRef = useRef<StageMood>('gala')
   const progressBarRef = useRef<HTMLDivElement>(null)
 
-  const presets: {
-    id: StageMood
-    label: string
-    shortLabel: string
-    icon: typeof Sparkles
-    colorClass: string
-    borderClass: string
-    desc: string
-    photo: 'vipGala' | 'conference' | 'productReveal'
-  }[] = [
+  const presets = [
     {
-      id: 'gala', label: 'Royal Gala', shortLabel: 'Gala', icon: Sparkles,
-      colorClass: 'text-amber-400 bg-amber-400/10',
-      borderClass: 'border-amber-400/50 shadow-[0_0_25px_rgba(212,175,55,0.35)]',
-      desc: 'Phase 01 // Luxury Gold Scenography',
-      photo: 'vipGala',
+      id: 'gala' as StageMood,
+      phase: '01',
+      label: 'Royal Gala',
+      shortLabel: 'Gala',
+      subtitle: 'Luxury Gold Scenography',
+      accentColor: '#d4af37',
+      glow: 'rgba(212, 175, 55, 0.4)',
+      photo: 'vipGala' as const,
     },
     {
-      id: 'summit', label: 'Cyber Summit', shortLabel: 'Summit', icon: Zap,
-      colorClass: 'text-cyan-400 bg-cyan-400/10',
-      borderClass: 'border-cyan-400/50 shadow-[0_0_25px_rgba(0,240,255,0.35)]',
-      desc: 'Phase 02 // Enterprise Cyber Tech Matrix',
-      photo: 'conference',
+      id: 'summit' as StageMood,
+      phase: '02',
+      label: 'Cyber Summit',
+      shortLabel: 'Summit',
+      subtitle: 'Enterprise Tech Matrix',
+      accentColor: '#38bdf8',
+      glow: 'rgba(56, 189, 248, 0.4)',
+      photo: 'conference' as const,
     },
     {
-      id: 'launch', label: 'Keynote Launch', shortLabel: 'Launch', icon: Flame,
-      colorClass: 'text-fuchsia-400 bg-fuchsia-400/10',
-      borderClass: 'border-fuchsia-400/50 shadow-[0_0_25px_rgba(217,70,239,0.35)]',
-      desc: 'Phase 03 // World Premiere Reveal',
-      photo: 'productReveal',
+      id: 'launch' as StageMood,
+      phase: '03',
+      label: 'Keynote Launch',
+      shortLabel: 'Launch',
+      subtitle: 'World Premiere Reveal',
+      accentColor: '#c084fc',
+      glow: 'rgba(192, 132, 252, 0.4)',
+      photo: 'productReveal' as const,
     },
   ]
 
@@ -183,26 +183,29 @@ export default function InteractiveStage() {
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/80 to-ink/60" />
 
         <div className="relative z-10 container-x flex flex-col items-center text-center">
-          <div className="mb-8 flex items-center gap-2 rounded-full border border-white/20 bg-black/80 p-1.5 backdrop-blur-xl">
+          <div className="mb-8 flex items-center gap-1.5 rounded-full border border-white/10 bg-[#07080c]/85 p-1.5 backdrop-blur-2xl shadow-[0_12px_40px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.08)]">
             {presets.map((p) => {
-              const Icon = p.icon
               const active = mood === p.id
               return (
                 <button
                   key={p.id}
                   onClick={() => setMood(p.id)}
-                  className={`flex items-center gap-1 sm:gap-1.5 rounded-full px-2.5 py-1.5 sm:px-4 sm:py-2 text-[0.6rem] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
-                    active ? `border ${p.borderClass} ${p.colorClass} text-white` : 'text-slate-400 hover:text-white'
+                  className={`flex items-center gap-2 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-[0.62rem] sm:text-xs font-semibold uppercase tracking-[0.16em] transition-all duration-300 ${
+                    active ? 'text-white bg-white/[0.08] shadow-[0_0_20px_rgba(212,175,55,0.3)]' : 'text-slate-400 hover:text-white'
                   }`}
+                  style={active ? { borderColor: p.accentColor } : undefined}
                 >
-                  <Icon size={14} />
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: p.accentColor }}
+                  />
                   <span>{p.label}</span>
                 </button>
               )
             })}
           </div>
 
-          <p className="eyebrow text-gold mb-3">{currentTheme.desc}</p>
+          <p className="eyebrow text-gold mb-3">STAGE {currentTheme.phase} • {currentTheme.subtitle}</p>
           <h3 className="display h-lg text-white max-w-2xl">
             Interactive Stage <span className="italic gold-gradient-text font-serif">Architecture.</span>
           </h3>
@@ -232,48 +235,86 @@ export default function InteractiveStage() {
           }}
         />
 
-        {/* Top Controls — positioned below navbar on mobile and desktop */}
-        <div className="pointer-events-auto absolute inset-x-0 top-16 sm:top-20 z-20 flex flex-col items-center justify-between gap-2.5 px-3 sm:px-6 md:flex-row md:px-12">
-          {/* Phase Badge */}
-          <div className="flex items-center gap-2 rounded-full border border-white/15 bg-black/75 px-3 py-1.5 sm:px-4 sm:py-2 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
-            <span className="relative flex h-2 w-2">
+        {/* Top Controls — Architectural Scenography Console */}
+        <div className="pointer-events-auto absolute inset-x-0 top-14 sm:top-20 z-20 flex flex-col items-center justify-between gap-3 px-4 sm:px-8 md:flex-row md:px-14">
+          {/* Phase Badge — Architectural Stage Plaque */}
+          <div className="flex items-center gap-3.5 rounded-full border border-white/[0.12] bg-[#06070a]/90 px-4 py-2 sm:px-5 sm:py-2.5 backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.12)]">
+            {/* Optic Iris Jewel Lens */}
+            <div className="relative flex items-center justify-center">
               <span
-                className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${
-                  mood === 'gala' ? 'bg-amber-400' : mood === 'summit' ? 'bg-cyan-400' : 'bg-fuchsia-400'
-                }`}
+                className="absolute h-4 w-4 rounded-full opacity-60 transition-all duration-500"
+                style={{
+                  backgroundColor: currentTheme.accentColor,
+                  filter: 'blur(4px)',
+                }}
               />
               <span
-                className={`relative inline-flex h-2 w-2 rounded-full ${
-                  mood === 'gala' ? 'bg-amber-400' : mood === 'summit' ? 'bg-cyan-400' : 'bg-fuchsia-400'
-                }`}
+                className="relative h-2.5 w-2.5 rounded-full border border-white/30 transition-all duration-500"
+                style={{
+                  background: `radial-gradient(circle at 35% 35%, #ffffff 0%, ${currentTheme.accentColor} 65%)`,
+                  boxShadow: `0 0 10px ${currentTheme.accentColor}`,
+                }}
               />
-            </span>
-            <span className="eyebrow !text-[0.58rem] sm:!text-[0.65rem] text-white tracking-wider">{currentTheme.desc}</span>
+            </div>
+
+            {/* Typography & Mode Metadata */}
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[0.62rem] sm:text-[0.66rem] font-bold tracking-[0.2em] text-gold uppercase tabular-nums">
+                PHASE {currentTheme.phase}
+              </span>
+              <span className="h-3 w-px bg-white/20" aria-hidden="true" />
+              <span className="text-[0.65rem] sm:text-[0.7rem] font-semibold tracking-[0.16em] uppercase text-white">
+                {currentTheme.label}
+              </span>
+              <span className="hidden sm:inline text-white/30 text-[0.65rem] font-light">·</span>
+              <span className="hidden sm:inline text-[0.62rem] sm:text-[0.66rem] tracking-[0.14em] uppercase text-slate-400">
+                {currentTheme.subtitle}
+              </span>
+            </div>
           </div>
 
-          {/* Phase Switcher Tabs — mobile optimized padding & typography */}
-          <div className="relative flex items-center gap-1 rounded-full border border-white/20 bg-black/85 p-1 sm:p-1.5 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+          {/* Phase Switcher Tabs — Segmented Architectural Deck */}
+          <nav
+            aria-label="3D Scenography Presets"
+            className="flex items-center gap-1 sm:gap-1.5 rounded-full border border-white/[0.12] bg-[#06070a]/90 p-1 sm:p-1.5 backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.12)]"
+          >
             {presets.map((p) => {
-              const Icon = p.icon
               const active = mood === p.id
               return (
                 <button
                   key={p.id}
+                  type="button"
                   onClick={() => jumpToPhase(p.id)}
                   aria-label={`Switch to ${p.label}`}
-                  className={`group relative flex items-center gap-1.5 rounded-full px-2.5 py-1.5 sm:px-4 sm:py-2 text-[0.62rem] sm:text-[0.68rem] font-bold uppercase tracking-wider sm:tracking-[0.2em] transition-all duration-300 ${
+                  className={`touch-feedback group relative flex min-h-[36px] sm:min-h-[40px] items-center gap-2 rounded-full px-3.5 py-1.5 sm:px-4 sm:py-2 text-[0.62rem] sm:text-[0.68rem] font-semibold uppercase tracking-[0.16em] active:scale-[0.97] transition-[background-color,border-color,box-shadow,color,transform] duration-300 ease-out ${
                     active
-                      ? `border ${p.borderClass} ${p.colorClass} text-white`
-                      : 'text-slate-400 hover:text-white hover:bg-white/5'
+                      ? 'text-white'
+                      : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
                   }`}
+                  style={
+                    active
+                      ? {
+                          backgroundColor: 'rgba(255, 255, 255, 0.09)',
+                          boxShadow: `0 0 20px ${p.glow}, inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
+                          border: `1px solid ${p.accentColor}66`,
+                        }
+                      : { border: '1px solid transparent' }
+                  }
                 >
-                  <Icon size={12} className={`shrink-0 transition-transform duration-300 sm:w-3.5 sm:h-3.5 ${active ? 'scale-110' : 'group-hover:scale-110'}`} />
-                  <span className="hidden xs:inline sm:inline">{p.label}</span>
+                  <span
+                    className="h-1.5 w-1.5 rounded-full transition-all duration-300"
+                    style={{
+                      backgroundColor: active ? p.accentColor : 'rgba(255, 255, 255, 0.25)',
+                      boxShadow: active ? `0 0 8px ${p.accentColor}` : 'none',
+                    }}
+                  />
+                  <span className="tabular-nums font-mono text-[0.6rem] opacity-60">0{p.phase}</span>
+                  <span className="hidden xs:inline sm:inline">{p.shortLabel}</span>
                   <span className="xs:hidden sm:hidden">{p.shortLabel}</span>
                 </button>
               )
             })}
-          </div>
+          </nav>
         </div>
 
         {/* 3D Canvas — pre-warmed so it appears instantly with zero delay */}
@@ -293,21 +334,19 @@ export default function InteractiveStage() {
         )}
 
         {/* Scroll progress bar + cue */}
-        <div className="pointer-events-none absolute bottom-6 sm:bottom-8 inset-x-0 z-20 flex flex-col items-center gap-2">
-          <div className="h-1 w-28 sm:w-36 rounded-full bg-white/10 overflow-hidden">
+        <div className="pointer-events-none absolute bottom-6 sm:bottom-8 inset-x-0 z-20 flex flex-col items-center gap-2.5">
+          <div className="h-0.5 w-28 sm:w-36 rounded-full bg-white/10 overflow-hidden">
             <div
               ref={progressBarRef}
-              className={`h-full w-full origin-left transition-colors duration-300 ${
-                mood === 'gala'
-                  ? 'bg-amber-400 shadow-[0_0_10px_rgba(212,175,55,0.8)]'
-                  : mood === 'summit'
-                  ? 'bg-cyan-400 shadow-[0_0_10px_rgba(0,240,255,0.8)]'
-                  : 'bg-fuchsia-400 shadow-[0_0_10px_rgba(217,70,239,0.8)]'
-              }`}
-              style={{ transform: 'scaleX(0.05)' }}
+              className="h-full w-full origin-left transition-colors duration-500"
+              style={{
+                transform: 'scaleX(0.05)',
+                backgroundColor: currentTheme.accentColor,
+                boxShadow: `0 0 12px ${currentTheme.accentColor}`,
+              }}
             />
           </div>
-          <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-black/70 px-3 py-1 text-[0.58rem] sm:text-[0.62rem] uppercase tracking-widest text-slate-300 backdrop-blur-md">
+          <span className="flex items-center gap-2 rounded-full border border-white/10 bg-[#07080c]/85 px-3.5 py-1 text-[0.58rem] sm:text-[0.62rem] uppercase tracking-[0.2em] font-medium text-slate-300 backdrop-blur-xl shadow-[0_8px_25px_rgba(0,0,0,0.6)]">
             <span>Scroll to Evolve Theme</span>
             <ChevronDown size={11} className="text-gold animate-bounce" />
           </span>

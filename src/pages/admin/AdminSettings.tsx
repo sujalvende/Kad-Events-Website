@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Settings, Save, CheckCircle2, ShieldCheck, Mail, Phone, MapPin } from 'lucide-react'
+import { Settings, Save, ShieldCheck, Mail, Phone, MapPin } from 'lucide-react'
 import { contact } from '../../data/content'
 
 export default function AdminSettings() {

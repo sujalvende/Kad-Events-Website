@@ -1,4 +1,3 @@
-import { services as defaultServices, projects as defaultProjects, contact as defaultContact, type Service, type Project } from '../data/content'
 import type { Enquiry } from './enquiry'
 
 export type EnquiryRecord = Enquiry & {
@@ -9,8 +8,6 @@ export type EnquiryRecord = Enquiry & {
 }
 
 const STORAGE_KEY_ENQUIRIES = 'kad_admin_enquiries_v1'
-const STORAGE_KEY_SERVICES = 'kad_admin_services_v1'
-const STORAGE_KEY_SETTINGS = 'kad_admin_settings_v1'
 const STORAGE_KEY_AUTH = 'kad_admin_auth_v1'
 
 const INITIAL_ENQUIRIES: EnquiryRecord[] = [

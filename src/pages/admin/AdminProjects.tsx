@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Briefcase, Eye, CheckCircle2, ArrowUpRight } from 'lucide-react'
+import { CheckCircle2, ArrowUpRight } from 'lucide-react'
 import { projects as initialProjects, type Project } from '../../data/content'
 import { Link } from 'react-router'
 

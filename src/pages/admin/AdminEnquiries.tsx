@@ -1,17 +1,8 @@
 import { useState, useEffect } from 'react'
 import { 
-  Inbox, 
   Search, 
   Download, 
   Trash2, 
-  CheckCircle2, 
-  Clock, 
-  Mail, 
-  Phone, 
-  Calendar, 
-  Users, 
-  MapPin, 
-  FileText,
   X 
 } from 'lucide-react'
 import { 

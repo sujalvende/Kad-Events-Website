@@ -17,7 +17,7 @@ const THEMES = {
     beamAlpha: 0.55,
     ambient: '#2a1e06',
     floor: '#1a1200',
-    screenText: 'KAD GLOBAL GALA // 2026',
+    screenText: 'KAD GLOBAL GALA · 2026',
     subText: 'HONORING EXTRAORDINARY LEADERSHIP',
   },
   summit: {
@@ -28,7 +28,7 @@ const THEMES = {
     beamAlpha: 0.58,
     ambient: '#061629',
     floor: '#001a2a',
-    screenText: 'GLOBAL TECH SUMMIT // KAD',
+    screenText: 'GLOBAL TECH SUMMIT · KAD',
     subText: 'THE FUTURE OF ENTERPRISE & AI',
   },
   launch: {
@@ -39,7 +39,7 @@ const THEMES = {
     beamAlpha: 0.62,
     ambient: '#220535',
     floor: '#1a0028',
-    screenText: 'KEYNOTE REVEAL // WORLD PREMIERE',
+    screenText: 'KEYNOTE REVEAL · WORLD PREMIERE',
     subText: 'DESIGNED FOR UNCOMPROMISED IMPACT',
   },
 }
@@ -63,7 +63,6 @@ const GEO = {
   plane_lg: new THREE.PlaneGeometry(9.5, 4.6),
   plane_halo: new THREE.PlaneGeometry(11, 5.5),
   cylinder_beam: new THREE.CylinderGeometry(0.06, 1.8, 11, 16, 1, true),
-  capsule: new THREE.CapsuleGeometry(0.24, 0.77, 3, 6),
 }
 
 /* ─── LED Screen Texture — throttled to 15fps ───────────────────────────── */
@@ -527,56 +526,6 @@ function ArenaStage({ mood }: { mood: StageMood }) {
   )
 }
 
-/* ─── Instanced Audience Silhouettes ────────────────────────────────────── */
-function AudienceCrowd({ color }: { color: string }) {
-  const LOW_END = useMemo(() => isLowEnd(), [])
-  const count = LOW_END ? 60 : 120
-
-  const matrices = useMemo(() => {
-    const mats: THREE.Matrix4[] = []
-    const dummy = new THREE.Object3D()
-    let idx = 0
-    for (let i = -12; i <= 12; i += LOW_END ? 2.2 : 1.6) {
-      for (let z = 5.5; z <= 10; z += LOW_END ? 1.8 : 1.4) {
-        if (idx >= count) break
-        const x = i + Math.sin(z * 4 + i) * 0.4
-        const h = 1.1 + Math.sin(i * 5) * 0.2
-        dummy.position.set(x, h / 2, z)
-        dummy.scale.set(1, h / 1.1, 1)
-        dummy.updateMatrix()
-        mats.push(dummy.matrix.clone())
-        idx++
-      }
-    }
-    return mats
-  }, [count, LOW_END])
-
-  const meshRef = useRef<THREE.InstancedMesh>(null)
-
-  useEffect(() => {
-    if (!meshRef.current) return
-    matrices.forEach((m, i) => meshRef.current!.setMatrixAt(i, m))
-    meshRef.current.instanceMatrix.needsUpdate = true
-  }, [matrices])
-
-  // Subtle rim-lit silhouettes
-  const bodyMat = useMemo(
-    () => new THREE.MeshStandardMaterial({
-      color: '#040507',
-      roughness: 0.95,
-      emissive: color,
-      emissiveIntensity: 0.04,
-    }),
-    [color]
-  )
-  useEffect(() => () => bodyMat.dispose(), [bodyMat])
-
-  return (
-    <instancedMesh ref={meshRef} args={[GEO.capsule, bodyMat, count]}>
-    </instancedMesh>
-  )
-}
-
 /* ─── Haze Particles ────────────────────────────────────────────────────── */
 function HazeParticles({ color }: { color: string }) {
   const pointsRef = useRef<THREE.Points>(null)
@@ -810,7 +759,6 @@ export default function ThreeDStage({
           {/* Stage structures */}
           <TrussSystem color={theme.primary} />
           <ArenaStage mood={mood} />
-          <AudienceCrowd color={theme.primary} />
           <HazeParticles color={theme.glow} />
 
           {/* Floor spotlights */}

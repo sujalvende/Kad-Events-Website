@@ -10,6 +10,7 @@ type Props<T> = {
   className?: string
   edgeColor?: string // Tailwind color class, e.g. 'from-ink' or 'from-panel'
   ariaLabel?: string
+  direction?: 'left' | 'right'
 }
 
 /**
@@ -27,6 +28,7 @@ export default function LoopingCards<T>({
   className = '',
   edgeColor = 'from-ink',
   ariaLabel = 'Cards carousel',
+  direction = 'left',
 }: Props<T>) {
   // Desktop marquee state
   const [isPaused, setIsPaused] = useState(false)
@@ -228,13 +230,12 @@ export default function LoopingCards<T>({
         <div
           className="flex w-max will-change-transform py-4"
           style={{
-            animationName: 'marqueeCardsLoop',
+            animationName: direction === 'right' ? 'marqueeCardsLoopRight' : 'marqueeCardsLoop',
             animationDuration: `${speedSeconds}s`,
             animationTimingFunction: 'linear',
             animationIterationCount: 'infinite',
             animationPlayState: isPaused ? 'paused' : 'running',
             gap: `${gapRem}rem`,
-            transform: 'translate3d(0, 0, 0)',
           }}
         >
           {duplicated.map(({ item, key, origIndex }) => (

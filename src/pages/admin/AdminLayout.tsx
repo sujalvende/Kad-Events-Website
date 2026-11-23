@@ -10,8 +10,7 @@ import {
   LogOut, 
   ExternalLink,
   Menu,
-  X,
-  ShieldAlert
+  X
 } from 'lucide-react'
 import { isAdminAuthenticated, logoutAdmin, getEnquiries } from '../../lib/admin-store'
 import { Logo } from '../../components/Navbar'

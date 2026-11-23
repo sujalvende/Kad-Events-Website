@@ -20,7 +20,6 @@ export default function ServiceDetail() {
   const s = services[idx]
   usePageMeta(s?.title ?? 'Not found', s?.intro ?? '')
   if (!s) return <NotFound />
-  const others = [1, 2, 3].map((n) => services[(idx + n) % services.length])
 
   return (
     <>

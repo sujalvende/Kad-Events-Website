@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone, ArrowUpRight, HelpCircle, MessageSquare } from 'lucide-react'
+import { Mail, Phone, ArrowUpRight, MessageSquare } from 'lucide-react'
 import { useSearchParams } from 'react-router'
 import { contact, serviceEventType } from '../data/content'
 import { usePageMeta } from '../lib/meta'

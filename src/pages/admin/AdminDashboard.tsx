@@ -3,15 +3,13 @@ import { Link } from 'react-router'
 import { 
   Inbox, 
   Layers, 
-  Briefcase, 
   CheckCircle2, 
   Clock, 
   ArrowUpRight, 
-  Download,
-  AlertCircle 
+  Download 
 } from 'lucide-react'
 import { getEnquiries, exportEnquiriesCSV, type EnquiryRecord } from '../../lib/admin-store'
-import { services, projects } from '../../data/content'
+import { services } from '../../data/content'
 
 export default function AdminDashboard() {
   const [enquiries, setEnquiries] = useState<EnquiryRecord[]>([])

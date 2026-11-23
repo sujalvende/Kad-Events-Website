@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState, useCallback } from 'react'
+import { lazy, Suspense, useEffect, useRef, useCallback } from 'react'
 import { ArrowUpRight, ShieldCheck, Box, Radio, Crown } from 'lucide-react'
 import { reasons, projects, services } from '../data/content'
 import { usePageMeta } from '../lib/meta'
@@ -144,7 +144,7 @@ function Marquee() {
         {all.map((t, i) => (
           <span key={i} className="mx-5 sm:mx-8 display text-base sm:text-xl font-medium uppercase tracking-[0.18em] text-slate-300">
             {t}
-            <span className="mx-5 sm:mx-8 inline-block text-gold drop-shadow-[0_0_8px_rgba(212,175,55,0.8)]">✦</span>
+            <span className="mx-5 sm:mx-8 inline-block text-gold drop-shadow-[0_0_8px_rgba(212,175,55,0.8)]">•</span>
           </span>
         ))}
       </div>
@@ -273,7 +273,9 @@ export default function Home() {
               aria-hidden
             >
               <div className="flex items-center gap-3">
-                <span className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-full bg-gold/20 text-gold border border-gold/40">✦</span>
+                <span className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-full bg-gold/20 text-gold border border-gold/40">
+                  <ShieldCheck size={18} />
+                </span>
                 <div>
                   <p className="eyebrow !text-[0.6rem] text-gold">Corporate Event Mastery</p>
                   <p className="display mt-0.5 text-xl sm:text-2xl text-white">Turnkey Excellence</p>
@@ -329,6 +331,7 @@ export default function Home() {
               items={standards}
               speedSeconds={32}
               gapRem={1.25}
+              direction="left"
               edgeColor="from-panel"
               ariaLabel="Production capabilities continuous loop"
               renderItem={(st) => {
@@ -351,7 +354,6 @@ export default function Home() {
                     </div>
                     <div className="border-t border-white/10 pt-3.5 sm:pt-4 mt-4 flex items-center justify-between text-[0.62rem] sm:text-[0.68rem] font-bold uppercase tracking-[0.2em] text-slate-400">
                       <span>{st.tag}</span>
-                      <span className="text-gold/60">✦</span>
                     </div>
                   </div>
                 )
@@ -405,6 +407,7 @@ export default function Home() {
                 items={services}
                 speedSeconds={38}
                 gapRem={1.25}
+                direction="right"
                 edgeColor="from-ink"
                 ariaLabel="Corporate services continuous loop"
                 renderItem={(s, i) => (

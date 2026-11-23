@@ -4,7 +4,7 @@ import { src, type PhotoKey } from '../lib/img'
 import Button from '../components/Button'
 import StageBeams from '../components/StageBeams'
 import LoopingCards from '../components/LoopingCards'
-import { ArrowUpRight, Award, Globe2 } from 'lucide-react'
+import { Award, Globe2 } from 'lucide-react'
 
 const formats: { title: string; desc: string; photo: PhotoKey; tag: string }[] = [
   {

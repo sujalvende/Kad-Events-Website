@@ -2,12 +2,11 @@ import { useEffect, useRef } from 'react'
 import { finePointer, reducedMotion } from '../lib/animations'
 
 /**
- * Minimal ring cursor — hardware-accelerated performance version:
- * - Uses pure GPU-composited transform: translate3d(...) scale(...) — ZERO layout/reflow (no top/left/width/height mutations)
- * - Single RAF loop with smooth lerping
- * - Throttles DOM tree hover queries to avoid main-thread overhead
- * - Only runs on fine-pointer desktop devices (disabled on mobile touch)
- * - Cleans up cleanly on unmount
+ * Luxury minimal ring cursor:
+ * - Position uses GPU translate3d(...) in RAF — zero layout thrashing while moving
+ * - Dimension transitions (22px normal -> 52px interactive -> 80px view) smoothly via CSS
+ * - The "VIEW" label is delicately proportioned (10px, uppercase, tracking + textIndent optical center)
+ * - Disabled on touch/mobile devices
  */
 export default function Cursor() {
   const ring = useRef<HTMLDivElement>(null)
@@ -21,13 +20,9 @@ export default function Cursor() {
 
     let targetX = -200, targetY = -200
     let currentX = -200, currentY = -200
-    let currentScale = 1, targetScale = 1
-    let viewMode = false, targetViewMode = false
+    let currentMode: 'normal' | 'interactive' | 'view' = 'normal'
     let visible = false
     let rafId: number
-
-    // Base cursor size is 22px
-    const BASE_SIZE = 22
 
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 
@@ -36,29 +31,17 @@ export default function Cursor() {
 
       currentX = lerp(currentX, targetX, 0.22)
       currentY = lerp(currentY, targetY, 0.22)
-      currentScale = lerp(currentScale, targetScale, 0.22)
 
       if (visible) {
-        // Pure compositor transform — zero layout or paint
-        el.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%) scale(${currentScale.toFixed(3)})`
+        // Pure compositor transform — zero layout or paint during mouse move
+        el.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`
         if (el.style.opacity !== '1') el.style.opacity = '1'
-      }
-
-      if (viewMode !== targetViewMode) {
-        viewMode = targetViewMode
-        if (viewMode) {
-          el.style.backgroundColor = 'rgba(197, 164, 109, 1)'
-          if (labelEl) labelEl.style.opacity = '1'
-        } else {
-          el.style.backgroundColor = 'rgba(197, 164, 109, 0)'
-          if (labelEl) labelEl.style.opacity = '0'
-        }
       }
     }
 
     rafId = requestAnimationFrame(tick)
 
-    let lastTargetCheck = 0
+    let lastCheck = 0
     const onMove = (e: PointerEvent) => {
       targetX = e.clientX
       targetY = e.clientY
@@ -68,16 +51,54 @@ export default function Cursor() {
         visible = true
       }
 
-      // Throttle DOM tree lookups to at most once every 32ms (~30fps)
+      // Check hover target at 30fps to keep main-thread free
       const now = performance.now()
-      if (now - lastTargetCheck > 32) {
-        lastTargetCheck = now
+      if (now - lastCheck > 32) {
+        lastCheck = now
         const t = (e.target as HTMLElement).closest?.('[data-cursor],a,button,select,summary')
         const isView = t?.getAttribute('data-cursor') === 'view'
         const isInteractive = !!t
 
-        targetViewMode = isView
-        targetScale = isView ? 92 / BASE_SIZE : isInteractive ? 54 / BASE_SIZE : 1
+        const newMode: 'normal' | 'interactive' | 'view' = isView
+          ? 'view'
+          : isInteractive
+          ? 'interactive'
+          : 'normal'
+
+        if (newMode !== currentMode) {
+          currentMode = newMode
+          if (newMode === 'view') {
+            el.style.width = '80px'
+            el.style.height = '80px'
+            el.style.backgroundColor = '#d4af37'
+            el.style.borderColor = '#d4af37'
+            el.style.boxShadow = '0 0 25px rgba(212, 175, 55, 0.35)'
+            if (labelEl) {
+              labelEl.style.opacity = '1'
+              labelEl.style.transitionDelay = '60ms'
+            }
+          } else if (newMode === 'interactive') {
+            el.style.width = '52px'
+            el.style.height = '52px'
+            el.style.backgroundColor = 'rgba(212, 175, 55, 0.14)'
+            el.style.borderColor = 'rgba(212, 175, 55, 0.8)'
+            el.style.boxShadow = 'none'
+            if (labelEl) {
+              labelEl.style.opacity = '0'
+              labelEl.style.transitionDelay = '0ms'
+            }
+          } else {
+            el.style.width = '22px'
+            el.style.height = '22px'
+            el.style.backgroundColor = 'transparent'
+            el.style.borderColor = '#d4af37'
+            el.style.boxShadow = 'none'
+            if (labelEl) {
+              labelEl.style.opacity = '0'
+              labelEl.style.transitionDelay = '0ms'
+            }
+          }
+        }
       }
     }
 
@@ -100,19 +121,27 @@ export default function Cursor() {
     <div
       ref={ring}
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[80] grid place-items-center rounded-full border border-gold max-lg:hidden will-change-transform"
+      className="pointer-events-none fixed left-0 top-0 z-[80] flex items-center justify-center rounded-full border border-gold max-lg:hidden"
       style={{
         width: 22,
         height: 22,
         opacity: 0,
-        transform: 'translate3d(-200px, -200px, 0) translate(-50%, -50%) scale(1)',
-        transition: 'background-color 0.25s, border-color 0.25s',
+        transform: 'translate3d(-200px, -200px, 0) translate(-50%, -50%)',
+        transition:
+          'width 0.28s cubic-bezier(0.16, 1, 0.3, 1), height 0.28s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.22s, border-color 0.22s, box-shadow 0.22s',
       }}
     >
       <span
         ref={label}
-        className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-ink pointer-events-none transition-opacity duration-200"
-        style={{ opacity: 0 }}
+        className="pointer-events-none select-none font-semibold uppercase text-ink text-center transition-opacity duration-150"
+        style={{
+          opacity: 0,
+          fontSize: '10px',
+          lineHeight: 1,
+          letterSpacing: '0.18em',
+          textIndent: '0.18em', // Compensates for trailing letter spacing to achieve optical centering
+          transform: 'translateY(0.5px)', // Optical vertical centering for uppercase font glyphs
+        }}
       >
         View
       </span>

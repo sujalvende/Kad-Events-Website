@@ -1,4 +1,4 @@
-import { Users, Shield, Cpu, Landmark, Car, HeartPulse, Zap, ShoppingBag } from 'lucide-react'
+import { Shield, Cpu, Landmark, Car, HeartPulse, Zap, ShoppingBag } from 'lucide-react'
 
 const sectors = [
   { icon: Cpu, name: 'Technology & Enterprise IT', status: 'Active Engagements', tier: 'Tier-1 Global' },

@@ -12,8 +12,6 @@ import {
   Radio, 
   Layers,
   Quote,
-  Building2,
-  Award,
   Globe2
 } from 'lucide-react'
 import { usePageMeta } from '../lib/meta'
