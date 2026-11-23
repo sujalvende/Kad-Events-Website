@@ -26,7 +26,7 @@ function canRender3D(): boolean {
 
 export default function InteractiveStage() {
   const [mood, setMood] = useState<StageMood>('gala')
-  const [scrollProgress, setScrollProgress] = useState(0)
+  const scrollProgressRef = useRef(0)
 
   // PRE-WARMING: mount in background so shaders are compiled before user scrolls here.
   // Because paused={!isOnScreen}, frameloop is 'never', consuming 0% continuous GPU.
@@ -35,6 +35,7 @@ export default function InteractiveStage() {
   const [render3D] = useState(() => canRender3D())
   const trackRef = useRef<HTMLDivElement>(null)
   const moodRef = useRef<StageMood>('gala')
+  const progressBarRef = useRef<HTMLDivElement>(null)
 
   const presets: {
     id: StageMood
@@ -127,7 +128,11 @@ export default function InteractiveStage() {
       if (totalHeight > 0) {
         const scrolled = -rect.top
         const p = Math.max(0, Math.min(1, scrolled / totalHeight))
-        setScrollProgress(p)
+        scrollProgressRef.current = p
+
+        if (progressBarRef.current) {
+          progressBarRef.current.style.transform = `scaleX(${p})`
+        }
 
         const newMood: StageMood = p < 0.33 ? 'gala' : p < 0.68 ? 'summit' : 'launch'
         if (newMood !== moodRef.current) {
@@ -283,7 +288,7 @@ export default function InteractiveStage() {
               </div>
             </div>
           }>
-            <ThreeDStage mood={mood} scrollProgress={scrollProgress} paused={!isOnScreen} />
+            <ThreeDStage mood={mood} scrollProgressRef={scrollProgressRef} paused={!isOnScreen} />
           </Suspense>
         )}
 
@@ -291,14 +296,15 @@ export default function InteractiveStage() {
         <div className="pointer-events-none absolute bottom-6 sm:bottom-8 inset-x-0 z-20 flex flex-col items-center gap-2">
           <div className="h-1 w-28 sm:w-36 rounded-full bg-white/10 overflow-hidden">
             <div
-              className={`h-full transition-all duration-300 ${
+              ref={progressBarRef}
+              className={`h-full w-full origin-left transition-colors duration-300 ${
                 mood === 'gala'
                   ? 'bg-amber-400 shadow-[0_0_10px_rgba(212,175,55,0.8)]'
                   : mood === 'summit'
                   ? 'bg-cyan-400 shadow-[0_0_10px_rgba(0,240,255,0.8)]'
                   : 'bg-fuchsia-400 shadow-[0_0_10px_rgba(217,70,239,0.8)]'
               }`}
-              style={{ width: `${Math.min(100, Math.max(5, scrollProgress * 100))}%` }}
+              style={{ transform: 'scaleX(0.05)' }}
             />
           </div>
           <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-black/70 px-3 py-1 text-[0.58rem] sm:text-[0.62rem] uppercase tracking-widest text-slate-300 backdrop-blur-md">

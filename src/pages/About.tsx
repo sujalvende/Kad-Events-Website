@@ -3,6 +3,7 @@ import { CtaBand, Eyebrow, PageHeader } from '../components/ui'
 import { src, type PhotoKey } from '../lib/img'
 import Button from '../components/Button'
 import StageBeams from '../components/StageBeams'
+import LoopingCards from '../components/LoopingCards'
 import { ArrowUpRight, Award, Globe2 } from 'lucide-react'
 
 const formats: { title: string; desc: string; photo: PhotoKey; tag: string }[] = [
@@ -133,39 +134,38 @@ export default function About() {
             </p>
           </div>
 
-          <div
-            data-stagger
-            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none -mx-4 px-4 gap-3.5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6"
-          >
-            {formats.map((f) => (
-              <div
-                key={f.title}
-                className="w-[82vw] xs:w-[70vw] sm:w-auto shrink-0 snap-center group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-card transition-all duration-300 active:scale-[0.98] hover:border-gold/60 hover:shadow-[0_15px_40px_-10px_rgba(212,175,55,0.25)]"
-              >
-                <div className="relative aspect-[16/11] overflow-hidden">
-                  <img
-                    src={src(f.photo, 900)}
-                    alt={f.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover saturate-[1.1] transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
-                  <span className="absolute left-3.5 top-3.5 sm:left-4 sm:top-4 rounded-full border border-gold/40 bg-black/70 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[0.58rem] sm:text-[0.6rem] font-bold uppercase tracking-wider text-gold backdrop-blur-md">
-                    {f.tag}
-                  </span>
+          <div className="mt-8 sm:mt-12">
+            <LoopingCards
+              items={formats}
+              speedSeconds={32}
+              gapRem={1.5}
+              edgeColor="from-panel"
+              ariaLabel="Specialised formats continuous loop"
+              renderItem={(f) => (
+                <div
+                  className="w-full lg:w-[320px] xl:w-[340px] h-full min-h-[350px] group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/12 bg-card transition-all duration-300 hover:border-gold/60 hover:shadow-[0_15px_40px_-10px_rgba(212,175,55,0.25)] active:scale-[0.98]"
+                >
+                  <div className="relative aspect-[16/11] overflow-hidden">
+                    <img
+                      src={src(f.photo, 900)}
+                      alt={f.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover saturate-[1.1] transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
+                    <span className="absolute left-3.5 top-3.5 rounded-full border border-gold/40 bg-black/70 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-gold backdrop-blur-md">
+                      {f.tag}
+                    </span>
+                  </div>
+                  <div className="p-5 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className="display text-xl sm:text-2xl text-white group-hover:text-gold transition-colors" style={{ textWrap: 'balance' }}>{f.title}</h3>
+                      <p className="mt-2 text-xs text-slate-300 leading-relaxed line-clamp-3" style={{ textWrap: 'pretty' }}>{f.desc}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="p-4 sm:p-6">
-                  <h3 className="display text-xl sm:text-2xl text-white group-hover:text-gold transition-colors">{f.title}</h3>
-                  <p className="mt-2 text-xs text-muted leading-relaxed">{f.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile swipe hint */}
-          <div className="mt-3.5 flex items-center justify-center gap-1.5 sm:hidden" aria-hidden>
-            <span className="text-[0.58rem] font-semibold uppercase tracking-widest text-slate-400">Swipe to view formats</span>
-            <span className="text-gold text-xs">→</span>
+              )}
+            />
           </div>
         </div>
       </section>

@@ -8,6 +8,7 @@ import Button from '../components/Button'
 import Hero from '../components/Hero'
 import StageBeams from '../components/StageBeams'
 import { CtaBand, Eyebrow, ProjectCard, ServiceCard } from '../components/ui'
+import LoopingCards from '../components/LoopingCards'
 import { src } from '../lib/img'
 
 // Lazily import the heavy 3D section — pre-warmed via InteractiveStage
@@ -107,7 +108,7 @@ function StatBand() {
           {stats.map((s) => (
             <li
               key={s.label}
-              className="group relative flex flex-col items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] p-4 sm:p-6 lg:p-8 text-center backdrop-blur-sm transition-all duration-500 hover:border-gold/40 hover:bg-white/[0.04] hover:shadow-[0_0_30px_rgba(212,175,55,0.15)]"
+              className="group relative flex flex-col items-center justify-center rounded-xl border border-white/5 bg-[#0d0e14]/80 p-4 sm:p-6 lg:p-8 text-center transition-all duration-300 hover:border-gold/40 hover:bg-[#12131c] hover:shadow-[0_0_30px_rgba(212,175,55,0.15)]"
             >
               <span data-reveal className="display text-[1.8rem] sm:text-[2.6rem] leading-none text-white transition-transform duration-500 group-hover:scale-105 lg:text-[4.2rem]">
                 <span className="gold-gradient-text font-serif">
@@ -167,22 +168,23 @@ export default function Home() {
   )
 
   const imgRef = useRef<HTMLDivElement>(null)
-  const secRef = useRef<HTMLElement | null>(null)
+  const isSectionVisible = useRef(false)
   const ticking = useRef(false)
 
   const onScroll = useCallback(() => {
-    if (ticking.current || window.innerWidth < 768) return
+    if (ticking.current || !isSectionVisible.current || window.innerWidth < 768) return
     ticking.current = true
     requestAnimationFrame(() => {
-      if (imgRef.current) {
-        if (!secRef.current) {
-          secRef.current = imgRef.current.closest('section')
-        }
-        const sec = secRef.current
+      const img = imgRef.current
+      if (img) {
+        const sec = img.closest('section')
         if (sec) {
           const rect = sec.getBoundingClientRect()
-          const progress = -rect.top / (sec.offsetHeight + window.innerHeight)
-          imgRef.current.style.transform = `translateY(${progress * 40}px)`
+          const total = sec.offsetHeight + window.innerHeight
+          if (total > 0) {
+            const progress = -rect.top / total
+            img.style.transform = `translateY(${progress * 40}px)`
+          }
         }
       }
       ticking.current = false
@@ -191,8 +193,25 @@ export default function Home() {
 
   useEffect(() => {
     if (reducedMotion()) return
+    const el = imgRef.current
+    if (!el) return
+
+    const sec = el.closest('section')
+    if (!sec) return
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        isSectionVisible.current = entry.isIntersecting
+      },
+      { rootMargin: '100px 0px' }
+    )
+    obs.observe(sec)
+
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => {
+      obs.disconnect()
+      window.removeEventListener('scroll', onScroll)
+    }
   }, [onScroll])
 
   return (
@@ -294,7 +313,7 @@ export default function Home() {
         </Suspense>
       </section>
 
-      {/* 6. Production Standard Grid */}
+      {/* 6. Production Capabilities: Smooth Looping Cards */}
       <section className="section-y border-t border-white/10 bg-panel relative overflow-hidden">
         <div className="pointer-events-none absolute right-0 top-1/3 h-96 w-96 rounded-full bg-cyan-500/5 blur-[140px]" />
         <div className="container-x">
@@ -304,58 +323,99 @@ export default function Home() {
             to="/process"
             cta="How We Deliver"
           />
-          <div
-            data-stagger
-            className="mt-8 sm:mt-16 flex overflow-x-auto snap-x snap-mandatory scrollbar-none -mx-4 px-4 gap-3.5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5"
-          >
-            {standards.map((st) => {
-              const Icon = st.icon
-              return (
-                <div
-                  key={st.n}
-                  className="w-[82vw] xs:w-[70vw] sm:w-auto shrink-0 snap-center group relative flex flex-col justify-between rounded-xl border border-white/10 bg-white/[0.02] p-5 sm:p-6 md:p-8 backdrop-blur-sm transition-all duration-300 active:scale-[0.98] hover:border-gold/60 hover:bg-white/[0.04] hover:shadow-[0_10px_35px_-5px_rgba(212,175,55,0.2)]"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span className="eyebrow text-gold">{st.n}</span>
-                      <span className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-lg border border-white/10 bg-white/5 text-gold group-hover:border-gold/40 group-hover:bg-gold/10 transition-colors">
-                        <Icon size={17} />
-                      </span>
-                    </div>
-                    <h3 className="display mt-4 sm:mt-6 text-xl sm:text-2xl text-white group-hover:text-gold transition-colors">{st.title}</h3>
-                    <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm leading-relaxed text-muted">{st.desc}</p>
-                  </div>
-                  <div className="mt-6 sm:mt-8 border-t border-white/10 pt-3 sm:pt-4 flex items-center justify-between text-[0.62rem] sm:text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">
-                    <span>{st.tag}</span>
-                    <span className="text-gold/40 text-xs sm:hidden">✦</span>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
 
-          {/* Mobile swipe hint */}
-          <div className="mt-3.5 flex items-center justify-center gap-1.5 sm:hidden" aria-hidden>
-            <span className="text-[0.58rem] font-semibold uppercase tracking-widest text-slate-400">Swipe to inspect all capabilities</span>
-            <span className="text-gold text-xs">→</span>
+          <div className="mt-8 sm:mt-14">
+            <LoopingCards
+              items={standards}
+              speedSeconds={32}
+              gapRem={1.25}
+              edgeColor="from-panel"
+              ariaLabel="Production capabilities continuous loop"
+              renderItem={(st) => {
+                const Icon = st.icon
+                return (
+                  <div className="w-full lg:w-[320px] xl:w-[340px] h-full min-h-[310px] sm:min-h-[330px] flex flex-col justify-between rounded-2xl border border-white/12 bg-gradient-to-b from-white/[0.04] to-white/[0.01] p-5 sm:p-7 backdrop-blur-md transition-all duration-300 hover:border-gold/60 hover:bg-white/[0.06] hover:shadow-[0_10px_35px_-5px_rgba(212,175,55,0.25)] active:scale-[0.98]">
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="eyebrow text-gold font-bold text-xs">{st.n}</span>
+                        <span className="grid h-10 w-10 place-items-center rounded-xl border border-gold/30 bg-gold/10 text-gold shadow-[0_0_12px_rgba(212,175,55,0.15)] transition-colors group-hover:border-gold/50 group-hover:bg-gold/20">
+                          <Icon size={18} />
+                        </span>
+                      </div>
+                      <h3 className="display mt-4 sm:mt-5 text-xl sm:text-2xl text-white group-hover:text-gold transition-colors leading-snug" style={{ textWrap: 'balance' }}>
+                        {st.title}
+                      </h3>
+                      <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm leading-relaxed text-slate-300" style={{ textWrap: 'pretty' }}>
+                        {st.desc}
+                      </p>
+                    </div>
+                    <div className="border-t border-white/10 pt-3.5 sm:pt-4 mt-4 flex items-center justify-between text-[0.62rem] sm:text-[0.68rem] font-bold uppercase tracking-[0.2em] text-slate-400">
+                      <span>{st.tag}</span>
+                      <span className="text-gold/60">✦</span>
+                    </div>
+                  </div>
+                )
+              }}
+            />
           </div>
         </div>
       </section>
 
-      {/* 7. Services Overview */}
+      {/* 7. Specialised Formats / Services Overview: Split-Screen Layout */}
       <section className="section-y bg-ink border-t border-white/10 relative overflow-hidden">
-        <div className="pointer-events-none absolute left-1/3 top-1/2 -translate-y-1/2 h-80 w-80 rounded-full bg-gold/10 blur-[140px]" />
+        <div className="pointer-events-none absolute left-1/4 top-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-gold/10 blur-[150px]" />
+        
         <div className="container-x">
-          <SectionHead
-            eyebrow="Specialised Formats"
-            title={<>What we <span className="italic gold-gradient-text font-serif">deliver.</span></>}
-            to="/services"
-            cta="All Services"
-          />
-          <div data-stagger className="mt-8 sm:mt-12 grid gap-4 sm:gap-5 grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
-            {services.slice(0, 4).map((s, i) => (
-              <ServiceCard key={s.slug} s={s} i={i} />
-            ))}
+          <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12 xl:gap-16">
+            {/* Left Side: Services Section Command Information */}
+            <div className="lg:col-span-5 flex flex-col justify-center">
+              <Eyebrow>Specialised Formats</Eyebrow>
+              <h2 data-reveal className="display h-lg text-white">
+                What We{' '}
+                <span className="italic gold-gradient-text font-serif">Deliver.</span>
+              </h2>
+              <p data-reveal className="mt-5 sm:mt-7 text-base sm:text-lg leading-relaxed text-slate-300">
+                From flagship international developer summits to automotive world reveals and high-security leadership retreats, KAD Events delivers turnkey spatial scenography, zero-fail AV engineering, and calm executive show direction across 8 core corporate event disciplines.
+              </p>
+
+              <div data-reveal className="mt-6 sm:mt-8 space-y-2.5 text-xs text-slate-400">
+                <div className="flex items-center gap-2.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+                  <span className="font-semibold text-slate-200">08 Core Corporate Event Disciplines</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+                  <span>Turnkey 3D Spatial Staging & CAD Feasibility</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+                  <span>Dual-Redundant Broadcast-Grade AV Lines</span>
+                </div>
+              </div>
+
+              <div data-reveal className="mt-8 sm:mt-10 flex flex-wrap items-center gap-4">
+                <Button to="/services">Explore All 8 Formats</Button>
+                <Button to="/contact" variant="outline">Schedule Briefing</Button>
+              </div>
+            </div>
+
+            {/* Right Side: Continuous Smooth Looping Service Cards */}
+            <div className="lg:col-span-7 min-w-0">
+              <LoopingCards
+                items={services}
+                speedSeconds={38}
+                gapRem={1.25}
+                edgeColor="from-ink"
+                ariaLabel="Corporate services continuous loop"
+                renderItem={(s, i) => (
+                  <ServiceCard
+                    s={s}
+                    i={i}
+                    className="w-full lg:w-[310px] xl:w-[330px] aspect-[3/4]"
+                  />
+                )}
+              />
+            </div>
           </div>
         </div>
       </section>

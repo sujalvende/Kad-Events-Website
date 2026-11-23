@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useRef, useState, useEffect } from 'react'
 import { reducedMotion } from '../lib/animations'
 
 interface StageBeamsProps {
@@ -13,6 +13,11 @@ interface StageBeamsProps {
  * Mimics real-world arena and gala searchlights fanning across the stage with dynamic,
  * atmospheric angular swaying and soft luminescence.
  * Hardware-accelerated with CSS transforms and GPU-composited SVG layers.
+ *
+ * Performance Architecture:
+ * - IntersectionObserver: Automatically unmounts heavy SVG blur filters & halts CSS keyframes
+ *   when scrolled out of view, consuming ZERO GPU cycles for offscreen sections.
+ * - Hardware isolated: Runs in its own GPU compositor sub-layer when visible.
  */
 function StageBeamsComponent({
   className = '',
@@ -20,7 +25,24 @@ function StageBeamsComponent({
   intensity = 1,
   direction = 'up',
 }: StageBeamsProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isInView, setIsInView] = useState(false)
   const isReduced = reducedMotion()
+
+  useEffect(() => {
+    if (isReduced) return
+    const el = containerRef.current
+    if (!el) return
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting)
+      },
+      { rootMargin: '120px 0px' }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [isReduced])
 
   const beamColor =
     color === 'gold'
@@ -56,96 +78,96 @@ function StageBeamsComponent({
 
   return (
     <div
+      ref={containerRef}
       aria-hidden
-      className={`pointer-events-none absolute inset-0 overflow-hidden will-change-transform ${className}`}
+      className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
       style={{ opacity: intensity }}
     >
-      <style>{`
-        @keyframes stageBeamSway1 { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
-        @keyframes stageBeamSway2 { 0%, 100% { transform: rotate(-5.5deg); } 50% { transform: rotate(5.5deg); } }
-        @keyframes stageBeamSway3 { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
-        @keyframes stageBeamSway4 { 0%, 100% { transform: rotate(5.5deg); } 50% { transform: rotate(-5.5deg); } }
-        @keyframes stageBeamSway5 { 0%, 100% { transform: rotate(7deg); } 50% { transform: rotate(-7deg); } }
-        @keyframes beamLuminescence { 0%, 100% { opacity: 0.65; } 50% { opacity: 1; } }
+      {isInView && !isReduced && (
+        <>
+          <style>{`
+            @keyframes stageBeamSway1 { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+            @keyframes stageBeamSway2 { 0%, 100% { transform: rotate(-5.5deg); } 50% { transform: rotate(5.5deg); } }
+            @keyframes stageBeamSway3 { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+            @keyframes stageBeamSway4 { 0%, 100% { transform: rotate(5.5deg); } 50% { transform: rotate(-5.5deg); } }
+            @keyframes stageBeamSway5 { 0%, 100% { transform: rotate(7deg); } 50% { transform: rotate(-7deg); } }
+            @keyframes beamLuminescence { 0%, 100% { opacity: 0.65; } 50% { opacity: 1; } }
 
-        /* Tighter, focused sway arcs for portrait mobile screens (<640px) */
-        @media (max-width: 640px) {
-          @keyframes stageBeamSway1 { 0%, 100% { transform: rotate(-3.5deg); } 50% { transform: rotate(3.5deg); } }
-          @keyframes stageBeamSway2 { 0%, 100% { transform: rotate(-2.8deg); } 50% { transform: rotate(2.8deg); } }
-          @keyframes stageBeamSway3 { 0%, 100% { transform: rotate(-2.2deg); } 50% { transform: rotate(2.2deg); } }
-          @keyframes stageBeamSway4 { 0%, 100% { transform: rotate(2.8deg); } 50% { transform: rotate(-2.8deg); } }
-          @keyframes stageBeamSway5 { 0%, 100% { transform: rotate(3.5deg); } 50% { transform: rotate(-3.5deg); } }
-        }
-      `}</style>
+            @media (max-width: 640px) {
+              @keyframes stageBeamSway1 { 0%, 100% { transform: rotate(-3.5deg); } 50% { transform: rotate(3.5deg); } }
+              @keyframes stageBeamSway2 { 0%, 100% { transform: rotate(-2.8deg); } 50% { transform: rotate(2.8deg); } }
+              @keyframes stageBeamSway3 { 0%, 100% { transform: rotate(-2.2deg); } 50% { transform: rotate(2.2deg); } }
+              @keyframes stageBeamSway4 { 0%, 100% { transform: rotate(2.8deg); } 50% { transform: rotate(-2.8deg); } }
+              @keyframes stageBeamSway5 { 0%, 100% { transform: rotate(3.5deg); } 50% { transform: rotate(-3.5deg); } }
+            }
+          `}</style>
 
-      {/* Atmospheric bottom stage source glow */}
-      <div
-        className="absolute inset-x-0 h-44 sm:h-52 blur-[80px] transition-all"
-        style={{
-          bottom: isUp ? '-30px' : 'auto',
-          top: isUp ? 'auto' : '-30px',
-          background: `radial-gradient(ellipse 70% 50% at 50% ${isUp ? '100%' : '0%'}, ${beamColor.glow} 0%, ${beamColor.ambient} 45%, transparent 75%)`,
-        }}
-      />
+          {/* Atmospheric bottom stage source glow */}
+          <div
+            className="absolute inset-x-0 h-44 sm:h-52 blur-[80px]"
+            style={{
+              bottom: isUp ? '-30px' : 'auto',
+              top: isUp ? 'auto' : '-30px',
+              background: `radial-gradient(ellipse 70% 50% at 50% ${isUp ? '100%' : '0%'}, ${beamColor.glow} 0%, ${beamColor.ambient} 45%, transparent 75%)`,
+            }}
+          />
 
-      {/* Mobile-specific focused spotlight corona */}
-      <div
-        className="block sm:hidden absolute inset-x-0 h-32 blur-[40px] pointer-events-none opacity-80"
-        style={{
-          bottom: isUp ? '0px' : 'auto',
-          top: isUp ? 'auto' : '0px',
-          background: `radial-gradient(ellipse 50% 40% at 50% ${isUp ? '100%' : '0%'}, ${beamColor.glow} 0%, transparent 70%)`,
-        }}
-      />
+          {/* Mobile-specific focused spotlight corona */}
+          <div
+            className="block sm:hidden absolute inset-x-0 h-32 blur-[40px] pointer-events-none opacity-80"
+            style={{
+              bottom: isUp ? '0px' : 'auto',
+              top: isUp ? 'auto' : '0px',
+              background: `radial-gradient(ellipse 50% 40% at 50% ${isUp ? '100%' : '0%'}, ${beamColor.glow} 0%, transparent 70%)`,
+            }}
+          />
 
-      {/* SVG Volumetric Light Beams */}
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 1000 600"
-        preserveAspectRatio="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient id={`beamGrad-${color}`} x1="0%" y1={isUp ? '100%' : '0%'} x2="0%" y2={isUp ? '0%' : '100%'}>
-            <stop offset="0%" stopColor={beamColor.primary} stopOpacity="0.95" />
-            <stop offset="25%" stopColor={beamColor.primary} stopOpacity="0.75" />
-            <stop offset="65%" stopColor={beamColor.ambient} stopOpacity="0.3" />
-            <stop offset="100%" stopColor={beamColor.ambient} stopOpacity="0" />
-          </linearGradient>
+          {/* SVG Volumetric Light Beams */}
+          <svg
+            className="absolute inset-0 h-full w-full"
+            viewBox="0 0 1000 600"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id={`beamGrad-${color}`} x1="0%" y1={isUp ? '100%' : '0%'} x2="0%" y2={isUp ? '0%' : '100%'}>
+                <stop offset="0%" stopColor={beamColor.primary} stopOpacity="0.95" />
+                <stop offset="25%" stopColor={beamColor.primary} stopOpacity="0.75" />
+                <stop offset="65%" stopColor={beamColor.ambient} stopOpacity="0.3" />
+                <stop offset="100%" stopColor={beamColor.ambient} stopOpacity="0" />
+              </linearGradient>
 
-          <filter id="beamBlur" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="7" />
-          </filter>
-        </defs>
+              <filter id="beamBlur" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="7" />
+              </filter>
+            </defs>
 
-        {beams.map((b, idx) => {
-          const swayAnim = isReduced
-            ? 'none'
-            : `stageBeamSway${(idx % 5) + 1} ${b.duration}s ease-in-out infinite alternate, beamLuminescence ${b.duration * 0.7}s ease-in-out infinite alternate`
-
-          return (
-            <g
-              key={b.id}
-              style={{
-                transformOrigin: `${b.originX}px ${originY}px`,
-                animation: swayAnim,
-                animationDelay: `${b.delay}s`,
-                mixBlendMode: 'screen',
-                willChange: 'transform, opacity',
-              }}
-            >
-              <polygon
-                points={`${b.originX - 16},${originY} ${b.originX + 16},${originY} ${b.topX2},${topY} ${b.topX1},${topY}`}
-                fill={`url(#beamGrad-${color})`}
-                filter="url(#beamBlur)"
-              />
-            </g>
-          )
-        })}
-      </svg>
+            {beams.map((b, i) => (
+              <g
+                key={b.id}
+                style={{
+                  transformOrigin: `${b.originX}px ${originY}px`,
+                  animation: `stageBeamSway${i + 1} ${b.duration}s ease-in-out infinite alternate`,
+                  animationDelay: `${b.delay}s`,
+                }}
+              >
+                <polygon
+                  points={`${b.originX},${originY} ${b.topX1},${topY} ${b.topX2},${topY}`}
+                  fill={`url(#beamGrad-${color})`}
+                  filter="url(#beamBlur)"
+                  style={{
+                    animation: `beamLuminescence ${b.duration * 0.8}s ease-in-out infinite alternate`,
+                    animationDelay: `${b.delay * 0.5}s`,
+                  }}
+                />
+              </g>
+            ))}
+          </svg>
+        </>
+      )}
     </div>
   )
 }
 
-export const StageBeams = memo(StageBeamsComponent)
+const StageBeams = memo(StageBeamsComponent)
 export default StageBeams

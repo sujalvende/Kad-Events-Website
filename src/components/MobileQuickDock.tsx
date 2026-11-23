@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
-import { Phone, Sparkles, MessageSquare } from 'lucide-react'
+import { Phone, ArrowUpRight } from 'lucide-react'
 import { contact } from '../data/content'
 import { TLink } from '../lib/transition'
 
 /**
- * Mobile-only floating quick dock.
- * Appears dynamically after user scrolls past the hero section.
- * Provides instant access to call, chat/inquire, and view services on mobile devices.
- * Automatically hidden on desktop (lg:hidden) and on the contact page.
+ * Mobile floating quick actions dock.
+ * - Throttled scroll listener using RAF to prevent main-thread lag
+ * - Automatically hidden on desktop (lg:hidden) and on the contact page
  */
 export default function MobileQuickDock() {
   const { pathname } = useLocation()
@@ -16,8 +15,15 @@ export default function MobileQuickDock() {
   const isContact = pathname === '/contact'
 
   useEffect(() => {
+    let ticking = false
     const onScroll = () => {
-      setVisible(window.scrollY > 280)
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        const isPast = window.scrollY > 280
+        setVisible((prev) => (prev !== isPast ? isPast : prev))
+        ticking = false
+      })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
@@ -44,23 +50,10 @@ export default function MobileQuickDock() {
         {/* Primary Let's Talk CTA */}
         <TLink
           to="/contact"
-          className="touch-feedback flex h-9 items-center gap-2 rounded-full bg-gradient-to-r from-gold via-amber-300 to-gold px-4 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-ink shadow-[0_0_15px_rgba(212,175,55,0.4)]"
+          className="touch-feedback flex h-9 items-center gap-1.5 rounded-full bg-gold px-4 text-[0.68rem] font-bold uppercase tracking-[0.2em] text-ink shadow-[0_0_15px_rgba(212,175,55,0.35)] transition-transform active:scale-95"
         >
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-ink opacity-60" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-ink" />
-          </span>
           <span>Let's Talk</span>
-          <Sparkles size={12} className="text-ink" />
-        </TLink>
-
-        {/* Explore Formats */}
-        <TLink
-          to="/services"
-          aria-label="Explore Capabilities"
-          className="touch-feedback flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/5 text-slate-300 transition-colors hover:border-gold hover:text-gold"
-        >
-          <MessageSquare size={14} />
+          <ArrowUpRight size={13} aria-hidden />
         </TLink>
       </div>
     </aside>

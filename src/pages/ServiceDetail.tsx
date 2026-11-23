@@ -3,6 +3,7 @@ import { useParams } from 'react-router'
 import { services } from '../data/content'
 import { usePageMeta } from '../lib/meta'
 import Button from '../components/Button'
+import LoopingCards from '../components/LoopingCards'
 import { ServiceCard, Eyebrow } from '../components/ui'
 import { src } from '../lib/img'
 import NotFound from './NotFound'
@@ -80,17 +81,33 @@ export default function ServiceDetail() {
         ))}
       </section>
 
-      {/* More services */}
-      <section className="section-y border-t border-line bg-panel">
+      {/* More services — Continuous Smooth Looping */}
+      <section className="section-y border-t border-line bg-panel relative overflow-hidden">
         <div className="container-x">
-          <h2 data-reveal className="display h-lg mb-12">
-            More <span className="italic text-gold">services.</span>
-          </h2>
-          <div data-stagger className="grid gap-3 grid-cols-2 md:grid-cols-3">
-            {others.map((o) => (
-              <ServiceCard key={o.slug} s={o} i={services.indexOf(o)} />
-            ))}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12">
+            <div>
+              <Eyebrow>Related Formats</Eyebrow>
+              <h2 data-reveal className="display h-lg text-white">
+                More <span className="italic gold-gradient-text font-serif">services.</span>
+              </h2>
+            </div>
           </div>
+
+          <LoopingCards
+            items={services.filter((item) => item.slug !== resolvedSlug)}
+            speedSeconds={36}
+            gapRem={1.25}
+            edgeColor="from-panel"
+            ariaLabel="More services continuous loop"
+            renderItem={(o) => (
+              <ServiceCard
+                key={o.slug}
+                s={o}
+                i={services.indexOf(o)}
+                className="w-full lg:w-[310px] xl:w-[330px] aspect-[3/4]"
+              />
+            )}
+          />
         </div>
       </section>
     </>

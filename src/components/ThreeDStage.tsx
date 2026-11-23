@@ -66,18 +66,18 @@ const GEO = {
   capsule: new THREE.CapsuleGeometry(0.24, 0.77, 3, 6),
 }
 
-/* ─── LED Screen Texture — throttled to 20fps ───────────────────────────── */
+/* ─── LED Screen Texture — throttled to 15fps ───────────────────────────── */
 function useDynamicLEDTexture(mood: StageMood) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const textureRef = useRef<THREE.CanvasTexture | null>(null)
   const frameCountRef = useRef(0)
   const LOW_END = useMemo(() => isLowEnd(), [])
-  const FRAME_SKIP = LOW_END ? 6 : 3
+  const FRAME_SKIP = LOW_END ? 8 : 4
 
   if (!canvasRef.current) {
     const c = document.createElement('canvas')
-    c.width = LOW_END ? 512 : 1024
-    c.height = LOW_END ? 256 : 512
+    c.width = LOW_END ? 256 : 512
+    c.height = LOW_END ? 128 : 256
     canvasRef.current = c
   }
 
@@ -87,6 +87,14 @@ function useDynamicLEDTexture(mood: StageMood) {
     t.magFilter = THREE.LinearFilter
     textureRef.current = t
   }
+
+  useEffect(() => {
+    return () => {
+      textureRef.current?.dispose()
+      textureRef.current = null
+      canvasRef.current = null
+    }
+  }, [])
 
   useFrame(({ clock }) => {
     frameCountRef.current++
@@ -687,7 +695,13 @@ function AnimatedLights({ theme }: { theme: typeof THEMES[StageMood] }) {
 }
 
 /* ─── Camera Controller ─────────────────────────────────────────────────── */
-function CameraController({ scrollProgress = 0 }: { scrollProgress?: number }) {
+function CameraController({
+  scrollProgress = 0,
+  scrollProgressRef,
+}: {
+  scrollProgress?: number
+  scrollProgressRef?: React.RefObject<number>
+}) {
   const { camera, gl, size } = useThree()
   const target = useRef({ x: 0, y: 0 })
   const current = useRef({ x: 0, y: 0 })
@@ -709,6 +723,8 @@ function CameraController({ scrollProgress = 0 }: { scrollProgress?: number }) {
   }, [gl])
 
   useFrame(({ clock }) => {
+    const sp = scrollProgressRef?.current ?? scrollProgress
+
     current.current.x += (target.current.x - current.current.x) * 0.045
     current.current.y += (target.current.y - current.current.y) * 0.045
 
@@ -720,9 +736,9 @@ function CameraController({ scrollProgress = 0 }: { scrollProgress?: number }) {
     const t = clock.getElapsedTime()
     const autoX = isPortrait ? Math.sin(t * 0.5) * 0.35 : 0
     const autoY = isPortrait ? Math.cos(t * 0.4) * 0.15 : 0
-    const targetZ = baseZ - scrollProgress * zoomDist
-    const targetY = baseY - scrollProgress * 0.9
-    const targetLookAtY = baseLookAtY - scrollProgress * 0.5
+    const targetZ = baseZ - sp * zoomDist
+    const targetY = baseY - sp * 0.9
+    const targetLookAtY = baseLookAtY - sp * 0.5
 
     camera.position.x += ((current.current.x * 1.9 + autoX) - camera.position.x) * 0.055
     camera.position.y += (targetY + (current.current.y * 0.65 + autoY) - camera.position.y) * 0.055
@@ -737,17 +753,23 @@ function CameraController({ scrollProgress = 0 }: { scrollProgress?: number }) {
 export default function ThreeDStage({
   mood = 'gala',
   scrollProgress = 0,
+  scrollProgressRef,
   paused = false,
 }: {
   mood?: StageMood
   scrollProgress?: number
+  scrollProgressRef?: React.RefObject<number>
   paused?: boolean
 }) {
   if (reducedMotion()) return null
   const theme = THEMES[mood]
   const LOW_END = isLowEnd()
 
-  const dpr: [number, number] = LOW_END ? [1, 1] : [1, 1.5]
+  const dpr: [number, number] = useMemo(() => {
+    if (typeof window === 'undefined') return [1, 1]
+    const maxRatio = Math.min(window.devicePixelRatio || 1, 1.5)
+    return LOW_END ? [1, 1] : [1, maxRatio]
+  }, [LOW_END])
 
   return (
     <div className="absolute inset-0" aria-hidden>
@@ -765,7 +787,7 @@ export default function ThreeDStage({
       >
         <Suspense fallback={null}>
           <PerspectiveCamera makeDefault position={[0, 2.9, 8.6]} fov={50} />
-          <CameraController scrollProgress={scrollProgress} />
+          <CameraController scrollProgress={scrollProgress} scrollProgressRef={scrollProgressRef} />
 
           {/* Base ambient — richer to avoid flat look */}
           <ambientLight intensity={0.65} color={theme.ambient} />

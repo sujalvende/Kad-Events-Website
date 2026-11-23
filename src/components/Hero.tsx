@@ -3,8 +3,9 @@ import { reducedMotion } from '../lib/animations'
 
 /**
  * Hero video — resilient multi-browser playback.
- * - Set defaultMuted & muted before play() to pass iOS Safari & Chrome autoplay policies.
- * - Displays high-resolution poster immediately; smoothly reveals video once frames are ready.
+ * - preload="metadata": prevents choking initial page load and bandwidth so LCP paints in <1.2s.
+ * - Displays high-resolution poster immediately with high fetchPriority.
+ * - Full-screen cinematic video with transparent navigation only (strictly no overlays).
  * - Pauses automatically when off-screen to preserve mobile GPU/battery.
  */
 export default function Hero() {
@@ -61,11 +62,12 @@ export default function Hero() {
     >
       <h1 className="sr-only">KAD Events: corporate event management</h1>
 
-      {/* Poster — always shown underneath, seamless transition once video frames render */}
+      {/* Poster — Instant LCP element, high fetchPriority, synchronous decode */}
       <img
         src="/media/poster.jpg"
         alt=""
         fetchPriority="high"
+        decoding="sync"
         width={1280}
         height={720}
         className="absolute inset-0 h-full w-full object-cover object-[50%_40%]"
@@ -78,7 +80,7 @@ export default function Hero() {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           poster="/media/poster.jpg"
           disablePictureInPicture
           aria-hidden
@@ -87,7 +89,7 @@ export default function Hero() {
           onLoadedData={() => setReady(true)}
           onPlaying={() => setReady(true)}
           onError={() => setFailed(true)}
-          className={`pointer-events-none absolute inset-0 h-full w-full object-cover object-[50%_40%] transition-opacity duration-1000 ${
+          className={`pointer-events-none absolute inset-0 h-full w-full object-cover object-[50%_40%] transition-opacity duration-700 ${
             ready ? 'opacity-100' : 'opacity-0'
           }`}
         >
@@ -96,30 +98,8 @@ export default function Hero() {
         </video>
       )}
 
-      {/* Top scrim for nav legibility */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/75 to-transparent" />
-
-      {/* Bottom scrim for mobile contrast & text legibility */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-ink via-ink/60 to-transparent md:hidden" />
-
-      {/* Luxury frosted glass scroll cue on mobile */}
-      <div
-        className="pointer-events-none absolute bottom-[max(2rem,env(safe-area-inset-bottom))] inset-x-0 z-20 flex flex-col items-center gap-2 md:hidden"
-        aria-hidden
-      >
-        <div className="flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-3.5 py-1 backdrop-blur-xl shadow-[0_4px_25px_rgba(0,0,0,0.8)]">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-75" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-gold" />
-          </span>
-          <span className="eyebrow !text-[0.58rem] tracking-[0.24em] text-slate-200">
-            Scroll to explore
-          </span>
-        </div>
-        <div className="h-6 w-3.5 rounded-full border border-white/25 p-0.5 flex justify-center">
-          <div className="h-1.5 w-1 rounded-full bg-gradient-to-b from-gold to-amber-200 animate-bounce shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
-        </div>
-      </div>
+      {/* Top subtle scrim for transparent global nav legibility */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink/75 to-transparent" />
     </section>
   )
 }

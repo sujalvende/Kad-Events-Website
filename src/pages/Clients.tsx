@@ -20,6 +20,7 @@ import { usePageMeta } from '../lib/meta'
 import StageBeams from '../components/StageBeams'
 import { Eyebrow } from '../components/ui'
 import Button from '../components/Button'
+import LoopingCards from '../components/LoopingCards'
 
 // Verified enterprise client relationship categories
 const clientTiers = [
@@ -286,30 +287,36 @@ export default function Clients() {
             </p>
           </div>
 
-          <div data-stagger className="mt-12 sm:mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {projectAssociations.map((item) => (
-              <div
-                key={item.title}
-                className="flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-sm hover:border-gold/40 transition-colors"
-              >
-                <div>
-                  <span className="display text-3xl sm:text-4xl gold-gradient-text font-serif">
-                    {item.metric}
-                  </span>
-                  <span className="block text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted mt-1">
-                    {item.label}
-                  </span>
+          <div className="mt-10 sm:mt-14">
+            <LoopingCards
+              items={projectAssociations}
+              speedSeconds={30}
+              gapRem={1.5}
+              edgeColor="from-ink"
+              ariaLabel="Project associations continuous loop"
+              renderItem={(item) => (
+                <div
+                  className="w-full lg:w-[320px] xl:w-[340px] h-full min-h-[300px] flex flex-col justify-between rounded-2xl border border-white/12 bg-gradient-to-b from-white/[0.03] to-white/[0.01] p-6 backdrop-blur-md transition-all duration-300 hover:border-gold/40 hover:bg-white/[0.05] active:scale-[0.98]"
+                >
+                  <div>
+                    <span className="display text-3xl sm:text-4xl gold-gradient-text font-serif">
+                      {item.metric}
+                    </span>
+                    <span className="block text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted mt-1">
+                      {item.label}
+                    </span>
 
-                  <h3 className="display mt-4 text-lg font-bold text-white">{item.title}</h3>
-                  <p className="mt-2 text-xs text-slate-300 leading-relaxed">{item.scope}</p>
-                </div>
+                    <h3 className="display mt-4 text-lg font-bold text-white" style={{ textWrap: 'balance' }}>{item.title}</h3>
+                    <p className="mt-2 text-xs text-slate-300 leading-relaxed" style={{ textWrap: 'pretty' }}>{item.scope}</p>
+                  </div>
 
-                <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[0.68rem] text-gold font-semibold">
-                  <span>{item.city}</span>
-                  <Globe2 size={13} />
+                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[0.68rem] text-gold font-semibold">
+                    <span>{item.city}</span>
+                    <Globe2 size={13} />
+                  </div>
                 </div>
-              </div>
-            ))}
+              )}
+            />
           </div>
         </div>
       </section>
