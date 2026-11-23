@@ -6,7 +6,7 @@ import type { StageMood } from './ThreeDStage'
 import { src } from '../lib/img'
 
 // Trigger chunk preload immediately when InteractiveStage.tsx is imported
-import('./ThreeDStage').catch(() => {})
+import('./ThreeDStage').catch(() => { })
 
 // Lazy-load the heavy 3D scene — pre-warmed in background
 const ThreeDStage = lazy(() => import('./ThreeDStage'))
@@ -160,8 +160,8 @@ export default function InteractiveStage() {
       id === 'gala'
         ? scrollTop + 20
         : id === 'summit'
-        ? scrollTop + totalDist * 0.48
-        : scrollTop + totalDist * 0.88
+          ? scrollTop + totalDist * 0.48
+          : scrollTop + totalDist * 0.88
 
     if (globalLenis) {
       globalLenis.scrollTo(targetY, { duration: 1.2 })
@@ -190,9 +190,8 @@ export default function InteractiveStage() {
                 <button
                   key={p.id}
                   onClick={() => setMood(p.id)}
-                  className={`flex items-center gap-2 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-[0.62rem] sm:text-xs font-semibold uppercase tracking-[0.16em] transition-all duration-300 ${
-                    active ? 'text-white bg-white/[0.08] shadow-[0_0_20px_rgba(212,175,55,0.3)]' : 'text-slate-400 hover:text-white'
-                  }`}
+                  className={`flex items-center gap-2 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-[0.62rem] sm:text-xs font-semibold uppercase tracking-[0.16em] transition-all duration-300 ${active ? 'text-white bg-white/[0.08] shadow-[0_0_20px_rgba(212,175,55,0.3)]' : 'text-slate-400 hover:text-white'
+                    }`}
                   style={active ? { borderColor: p.accentColor } : undefined}
                 >
                   <span
@@ -230,8 +229,8 @@ export default function InteractiveStage() {
               mood === 'gala'
                 ? 'radial-gradient(ellipse 70% 60% at 50% 65%, rgba(212,175,55,0.18) 0%, rgba(245,158,11,0.06) 45%, transparent 75%)'
                 : mood === 'summit'
-                ? 'radial-gradient(ellipse 70% 60% at 50% 65%, rgba(0,240,255,0.16) 0%, rgba(59,130,246,0.06) 45%, transparent 75%)'
-                : 'radial-gradient(ellipse 70% 60% at 50% 65%, rgba(217,70,239,0.18) 0%, rgba(139,92,246,0.06) 45%, transparent 75%)',
+                  ? 'radial-gradient(ellipse 70% 60% at 50% 65%, rgba(0,240,255,0.16) 0%, rgba(59,130,246,0.06) 45%, transparent 75%)'
+                  : 'radial-gradient(ellipse 70% 60% at 50% 65%, rgba(217,70,239,0.18) 0%, rgba(139,92,246,0.06) 45%, transparent 75%)',
           }}
         />
 
@@ -286,18 +285,17 @@ export default function InteractiveStage() {
                   type="button"
                   onClick={() => jumpToPhase(p.id)}
                   aria-label={`Switch to ${p.label}`}
-                  className={`touch-feedback group relative flex min-h-[36px] sm:min-h-[40px] items-center gap-2 rounded-full px-3.5 py-1.5 sm:px-4 sm:py-2 text-[0.62rem] sm:text-[0.68rem] font-semibold uppercase tracking-[0.16em] active:scale-[0.97] transition-[background-color,border-color,box-shadow,color,transform] duration-300 ease-out ${
-                    active
+                  className={`touch-feedback group relative flex min-h-[36px] sm:min-h-[40px] items-center gap-2 rounded-full px-3.5 py-1.5 sm:px-4 sm:py-2 text-[0.62rem] sm:text-[0.68rem] font-semibold uppercase tracking-[0.16em] active:scale-[0.97] transition-[background-color,border-color,box-shadow,color,transform] duration-300 ease-out ${active
                       ? 'text-white'
                       : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
-                  }`}
+                    }`}
                   style={
                     active
                       ? {
-                          backgroundColor: 'rgba(255, 255, 255, 0.09)',
-                          boxShadow: `0 0 20px ${p.glow}, inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
-                          border: `1px solid ${p.accentColor}66`,
-                        }
+                        backgroundColor: 'rgba(255, 255, 255, 0.09)',
+                        boxShadow: `0 0 20px ${p.glow}, inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
+                        border: `1px solid ${p.accentColor}66`,
+                      }
                       : { border: '1px solid transparent' }
                   }
                 >

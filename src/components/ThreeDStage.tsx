@@ -722,7 +722,7 @@ export default function ThreeDStage({
 
   return (
     <div className="absolute inset-0" aria-hidden>
-      
+
       <Canvas
         shadows={!LOW_END}
         dpr={dpr}
@@ -781,7 +781,7 @@ export default function ThreeDStage({
           )}
         </Suspense>
       </Canvas>
-      
+
     </div>
   )
 }
